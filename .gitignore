@@ -16,6 +16,11 @@
 # Uncomment this line if you wish to ignore the asset store tools plugin
 # /[Aa]ssets/AssetStoreTools*
 
+# Oculus Integration
+/[Aa]ssets/Oculus
+/[Aa]ssets/Oculus.meta
+/[Aa]ssets/Resources/OVRBuildConfig.*
+
 # TextMesh Pro files
 [Aa]ssets/TextMesh*Pro/
 
