@@ -5,8 +5,8 @@ To start:
 ```bash
 git clone https://github.com/Kif11/vr-unity-template
 cd oculusgo-unity-template
-sudo chmod +x util.sh
-./util.sh init
+sudo chmod +x utils.sh
+./utils.sh init
 ```
 
 Open Unity, press File > Build And Run
