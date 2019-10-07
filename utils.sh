@@ -5,7 +5,7 @@ case $cmd in
   "init")
     shift
     # Install Oculus Integration tools
-    git clone -b essential --single-branch https://github.com/Kif11/oculus-integration Assets/Oculus
+    git clone https://github.com/Kif11/oculus-integration Assets/Oculus
     ;;
   "remote")
     shift
