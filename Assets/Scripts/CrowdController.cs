@@ -7,6 +7,8 @@ public class CrowdController : MonoBehaviour
 {
   public Transform agent;
   public float spawnInterval = 0.05f;
+    int pMin = -5;
+    int pMax = 5;
 
   void InstantiateAgent(Vector3 pos)
   {
@@ -26,29 +28,21 @@ public class CrowdController : MonoBehaviour
     navMeshAgent.enabled = true;
   }
 
-  private IEnumerator SpawnAgents()
+  public void SpawnAgents()
   {
-    while (true)
-    {
-      float pMin = -10.0f;
-      float pMax = 10.0f;
       Vector3 pos = new Vector3(Random.Range(pMin, pMax), 0.0f, 20.0f);
       InstantiateAgent(pos);
-      yield return new WaitForSeconds(spawnInterval);
-    }
+
   }
 
-  IEnumerator Start()
+  void Start()
   {
-    for (int i = -10; i < 10; i++)
+    for (int i = pMin; i < pMax; i++)
     {
-      for (int j = -10; j < 10; j++) {
+      for (int j = pMin; j < pMax; j++) {
         Vector3 pos = new Vector3(agent.position.x + i, agent.position.y, agent.position.z + j);
         InstantiateAgent(pos);
       }
     }
-    yield return new WaitForSeconds(10.0f);
-    StartCoroutine(SpawnAgents());
-    print("Coroutine started");
   }
 }

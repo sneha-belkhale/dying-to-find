@@ -1,4 +1,6 @@
 ﻿// MoveTo.cs
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -7,7 +9,9 @@ public class AgentBrain : MonoBehaviour
   [SerializeField]
   private float handCollisionRadius = 0.5f;
   private NavMeshAgent m_Agent;
+  private Material mat;
   private Quaternion lastHeadRot;
+  private bool transitioning;
 
   public Transform goal;
   public Transform headPos;
@@ -17,16 +21,49 @@ public class AgentBrain : MonoBehaviour
 
   void Start()
   {
+    mat = GetComponentInChildren<SkinnedMeshRenderer>().material;
     m_Agent = GetComponent<NavMeshAgent>();
     m_Agent.destination = goal.position;
     lastHeadRot = headPos.rotation;
   }
 
+  IEnumerator FadeOut() {
+    float t = 0;
+
+    while(t <= 1f){
+      t += Time.deltaTime;
+      mat.SetFloat("_FadeOutVal", t);
+      yield return 0;
+    }
+    yield return 0;
+  }
+
+  IEnumerator FadeIn() {
+    float t = 1;
+
+    while(t >= 0f){
+      t -= Time.deltaTime;
+      mat.SetFloat("_FadeOutVal", t);
+      yield return 0;
+    }
+    yield return 0;
+  }
+
+  IEnumerator DoTransition() {
+    yield return StartCoroutine("FadeOut");
+    Vector3 pos = new Vector3(Random.Range(-5, 5), 0.0f, 20.0f);
+    transform.position = pos;
+    m_Agent.speed = Random.Range(0.4f, 0.9f);
+    yield return StartCoroutine("FadeIn");
+    transitioning = false;
+
+  }
   void LateUpdate()
   {
-    if (Vector3.Distance(transform.position, goal.position) < 2)
+    if (Vector3.Distance(transform.position, goal.position) < 8 && !transitioning)
     {
-      Destroy(gameObject);
+      StartCoroutine("DoTransition");
+      transitioning = true;
     }
 
     if((playerRightHand.position - headPos.position).magnitude < handCollisionRadius ||
