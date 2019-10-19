@@ -14,7 +14,7 @@ public class CrowdController : MonoBehaviour
   {
     Transform newAgent = Instantiate(agent, pos, Quaternion.identity);
 
-    float randomScale = Random.Range(0.8f, 1.2f);
+    float randomScale = Random.Range(1f, 1.2f);
 
     newAgent.localScale = new Vector3(newAgent.localScale.x * randomScale, newAgent.localScale.y * randomScale, newAgent.localScale.z * randomScale);
 

@@ -140,7 +140,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   handCollisionRadius: 0.5
   goal: {fileID: 605382741}
-  headPos: {fileID: 1240312899}
+  headPos: {fileID: 2004514910}
   playerRightHand: {fileID: 1479316954}
   playerLeftHand: {fileID: 1478594024}
   playerHead: {fileID: 1585908236}
@@ -844,12 +844,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d9809c5e8418bb047bf2c8ba1d1a2cec, type: 3}
---- !u!4 &1240312899 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -3167575404677891443, guid: 724180737de9e48e29ac9997f5b4c0ed,
-    type: 3}
-  m_PrefabInstance: {fileID: 947559662}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1268895349
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1266,6 +1260,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1577749883}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &2004514910 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8934294593374642532, guid: 724180737de9e48e29ac9997f5b4c0ed,
+    type: 3}
+  m_PrefabInstance: {fileID: 947559662}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2032311966
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1360,12 +1360,12 @@ PrefabInstance:
     - target: {fileID: -927199367670048503, guid: 724180737de9e48e29ac9997f5b4c0ed,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 724180737de9e48e29ac9997f5b4c0ed,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.106
+      value: -0.632
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 724180737de9e48e29ac9997f5b4c0ed,
         type: 3}
@@ -1425,17 +1425,22 @@ PrefabInstance:
     - target: {fileID: -6057140222963153312, guid: 724180737de9e48e29ac9997f5b4c0ed,
         type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2927792998606800557, guid: 724180737de9e48e29ac9997f5b4c0ed,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: ac0763a60845244028d774ad57ea93d0, type: 2}
+      objectReference: {fileID: 2100000, guid: 1a842e04e7a144f89b54d16e1fc5a323, type: 2}
     - target: {fileID: 2927792998606800557, guid: 724180737de9e48e29ac9997f5b4c0ed,
         type: 3}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4718550991962472725, guid: 724180737de9e48e29ac9997f5b4c0ed,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.658
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 724180737de9e48e29ac9997f5b4c0ed, type: 3}
@@ -1445,35 +1450,7 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 2033699521}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &2033699523 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -3167575404677891443, guid: 724180737de9e48e29ac9997f5b4c0ed,
-    type: 3}
-  m_PrefabInstance: {fileID: 2033699521}
-  m_PrefabAsset: {fileID: 0}
---- !u!195 &2033699524
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2033699522}
-  m_Enabled: 0
-  m_AgentTypeID: 0
-  m_Radius: 0.2
-  m_Speed: 0.65
-  m_Acceleration: 8
-  avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
-  m_AutoRepath: 1
-  m_Height: 1.8
-  m_BaseOffset: 0
-  m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
---- !u!114 &2033699525
+--- !u!114 &2033699523
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1482,15 +1459,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 2033699522}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e2e6c1ea515834a5aae3980549a480a7, type: 3}
+  m_Script: {fileID: 11500000, guid: 21e9e74665632430f9f65020ddae5612, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  handCollisionRadius: 0.5
-  goal: {fileID: 605382741}
-  headPos: {fileID: 2033699523}
-  playerRightHand: {fileID: 1479316954}
-  playerLeftHand: {fileID: 1478594024}
-  playerHead: {fileID: 1585908236}
 --- !u!1 &2137680228
 GameObject:
   m_ObjectHideFlags: 0

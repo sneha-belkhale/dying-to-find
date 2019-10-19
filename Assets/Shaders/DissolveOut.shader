@@ -3,7 +3,9 @@
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
-        _FadeOutVal ("Fade out percent", Range(0, 1)) = 0.1
+        _FadeOutVal ("Fade out percent", Range(0, 1)) = 0.0
+        _VertOutVal ("Vert out direction", Vector) = (0,0,0,1)
+        _Color ("Color", Color) = (0,0,0,0)
     }
     SubShader
     {
@@ -35,11 +37,15 @@
 
             sampler2D _MainTex;
             float4 _MainTex_ST;
+            float4 _Color;
             float _FadeOutVal;
+            float4 _VertOutVal;
 
             v2f vert (appdata v)
             {
                 v2f o;
+                float dissolve = tex2Dlod(_MainTex, float4(v.uv, 0,0)).r;
+                v.vertex.xyz += _VertOutVal.w * 3 * _FadeOutVal *  dissolve * _VertOutVal.xyz;
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
                 UNITY_TRANSFER_FOG(o,o.vertex);
@@ -49,8 +55,17 @@
             fixed4 frag (v2f i) : SV_Target
             {
                 // sample the dissolve texture
-                fixed4 col = tex2D(_MainTex, i.uv);
-                col = fixed4(0, 0, 0, 1) + _FadeOutVal * fixed4(1,1,1,1);
+                fixed4 col = _Color;
+
+                float dissolve = tex2D(_MainTex, i.uv).r;
+                // float dissolveScroll = tex2D(_MainTex2, 0.1 * _UvScale * IN.uv_MainTex + 0.5 * cos(0.5*_Time.y)).r;
+                // finalWireframe *= clamp(dissolve - _FadeOutVal, 0, 1);
+                float isVisible = dissolve - _FadeOutVal;
+                clip(isVisible);
+
+                float isGlowing = smoothstep(0.15, 0.01, isVisible);
+                col += _FadeOutVal * isGlowing * fixed4(0.5,0.5,0.5,1);
+
                 // apply fog
                 UNITY_APPLY_FOG(i.fogCoord, col);
                 return col;

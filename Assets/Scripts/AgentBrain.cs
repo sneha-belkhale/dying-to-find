@@ -29,10 +29,14 @@ public class AgentBrain : MonoBehaviour
 
   IEnumerator FadeOut() {
     float t = 0;
-
+    float speed = Random.Range(0.8f, 1.4f);
+    Vector4 dir = new Vector4(0,0,1,0);
     while(t <= 1f){
-      t += Time.deltaTime;
-      mat.SetFloat("_FadeOutVal", t);
+      t += speed * Time.deltaTime;
+      float easeT = Easing.Circular.In(t);
+      dir.w = Mathf.Min(easeT, 1);
+      mat.SetFloat("_FadeOutVal", Mathf.Min(easeT, 1));
+      mat.SetVector("_VertOutVal", dir);
       yield return 0;
     }
     yield return 0;
@@ -40,10 +44,14 @@ public class AgentBrain : MonoBehaviour
 
   IEnumerator FadeIn() {
     float t = 1;
-
+    float speed = Random.Range(0.8f, 1.4f);
+    Vector4 dir = new Vector4(0,0,-1,0);
     while(t >= 0f){
-      t -= Time.deltaTime;
-      mat.SetFloat("_FadeOutVal", t);
+      t -= speed * Time.deltaTime;
+      float easeT = Easing.Circular.Out(t);
+      dir.w = Mathf.Min(easeT, 1);
+      mat.SetFloat("_FadeOutVal", Mathf.Max(easeT,0));
+      mat.SetVector("_VertOutVal", dir);
       yield return 0;
     }
     yield return 0;
