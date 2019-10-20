@@ -9,6 +9,7 @@ public class CCHand : MonoBehaviour
     GameObject grabbedAgent;
     Vector3 lastGrabbedAgentPos;
     Vector3 lastHandPos;
+    Vector3 lastClosestPoint;
     bool isGrabbing = false;
     Collider[] results = new Collider[5];
     public void LateUpdate(){
@@ -20,15 +21,20 @@ public class CCHand : MonoBehaviour
                 float minDist = 1f;
                 int minIdx = 0;
                 for (int i = 0 ; i < length; i++){
-                    float dist = (results[i].ClosestPoint(transform.position) - transform.position).magnitude;
+                    Vector3 closestPoint = results[i].ClosestPoint(transform.position);
+                    float dist = (closestPoint - transform.position).magnitude;
                     if(dist < minDist){
                         minIdx = i;
                         minDist = dist;
+                        lastClosestPoint = closestPoint;
                     }
                 }
                 if (minDist < 1f){
                     grabbedAgent = results[minIdx].gameObject;
                     grabbedAgent.GetComponent<Animator>().SetTrigger("next");
+                    grabbedAgent.GetComponentInChildren<SkinnedMeshRenderer>().material.SetVector(
+                        "_WarpCenter", 
+                        new Vector4(lastClosestPoint.x, lastClosestPoint.y, lastClosestPoint.z, 100));
                     lastGrabbedAgentPos = grabbedAgent.transform.position;
                     grabInput.TriggerHaptics();
                     isGrabbing = true;
@@ -42,11 +48,16 @@ public class CCHand : MonoBehaviour
                     grabbedAgent.transform.position = lastGrabbedAgentPos;
                     Vector3 dif = transform.position - lastHandPos;
                     CCPlayer.localPlayer.transform.position -= dif.withY(0f);
+                    grabbedAgent.GetComponentInChildren<SkinnedMeshRenderer>().material.SetVector("_WarpDir", 10f * dif);
                 }
                 break;
             }
             case GrabState.Released: {
                 grabbedAgent.GetComponent<Animator>().SetTrigger("next");
+                grabbedAgent.GetComponentInChildren<SkinnedMeshRenderer>().material.SetVector("_WarpDir", Vector3.zero);
+                grabbedAgent.GetComponentInChildren<SkinnedMeshRenderer>().material.SetVector(
+                        "_WarpCenter", 
+                        new Vector4(100, 100, 100, 0));
                 isGrabbing = false;
                 break;
             }

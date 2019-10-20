@@ -82,3 +82,5 @@ Material:
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _RimColor: {r: 0, g: 0, b: 0, a: 1}
     - _VertOutVal: {r: 0, g: 0, b: 0, a: 0}
+    - _WarpCenter: {r: -0.64, g: 1.231, b: 18.944, a: 1}
+    - _WarpDir: {r: 0, g: 0, b: 0, a: 0}

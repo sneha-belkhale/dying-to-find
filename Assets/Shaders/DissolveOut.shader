@@ -5,6 +5,8 @@
         _MainTex ("Texture", 2D) = "white" {}
         _FadeOutVal ("Fade out percent", Range(0, 1)) = 0.0
         _VertOutVal ("Vert out direction", Vector) = (0,0,0,1)
+        _WarpDir ("Warp direction", Vector) = (0,0,0,0)
+        _WarpCenter ("Warp center", Vector) = (0,0,0,0)
         _Color ("Color", Color) = (0,0,0,0)
     }
     SubShader
@@ -40,13 +42,22 @@
             float4 _Color;
             float _FadeOutVal;
             float4 _VertOutVal;
+            float4 _WarpCenter;
+            float4 _WarpDir;
 
             v2f vert (appdata v)
             {
                 v2f o;
                 float dissolve = tex2Dlod(_MainTex, float4(v.uv, 0,0)).r;
                 v.vertex.xyz += _VertOutVal.w * 3 * _FadeOutVal *  dissolve * _VertOutVal.xyz;
-                o.vertex = UnityObjectToClipPos(v.vertex);
+
+                float3 vWorldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
+
+                float dist = (vWorldPos - _WarpCenter.xyz);
+                half radialFalloff = min(dot(dist, dist) * _WarpCenter.w, 1);
+                vWorldPos += (1-radialFalloff) * _WarpDir.xyz;
+
+                o.vertex = UnityWorldToClipPos(vWorldPos);
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
                 UNITY_TRANSFER_FOG(o,o.vertex);
                 return o;
