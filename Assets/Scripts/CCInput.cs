@@ -8,7 +8,7 @@ Holding,
 Released
 }
 
-public class CCGrabInput : MonoBehaviour
+public class CCInput : MonoBehaviour
 {
 public string hand;
 private OVRInput.Controller ovrHand;

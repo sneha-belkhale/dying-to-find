@@ -5,7 +5,7 @@ using UnityEngine;
 //Static Class to hand grab state
 public class CCHand : MonoBehaviour
 {
-    public CCGrabInput grabInput;
+    public CCInput grabInput;
     GameObject grabbedAgent;
     Vector3 lastGrabbedAgentPos;
     Vector3 lastHandPos;
@@ -45,24 +45,40 @@ public class CCHand : MonoBehaviour
             }
             case GrabState.Holding: {
                 if(isGrabbing){
-                    grabbedAgent.transform.position = lastGrabbedAgentPos;
-                    Vector3 dif = transform.position - lastHandPos;
-                    CCPlayer.localPlayer.transform.position -= dif.withY(0f);
-                    grabbedAgent.GetComponentInChildren<SkinnedMeshRenderer>().material.SetVector("_WarpDir", 10f * dif);
+                    // check if player somehow got too far 
+                    if(Vector3.Distance(CCPlayer.localPlayer.transform.position, grabbedAgent.transform.position) > 2f){
+                        isGrabbing = false;
+                        HandleRelease();
+                    } else {
+                        HandleGrabHold();
+                    }
                 }
                 break;
             }
             case GrabState.Released: {
-                grabbedAgent.GetComponent<Animator>().SetTrigger("next");
-                grabbedAgent.GetComponentInChildren<SkinnedMeshRenderer>().material.SetVector("_WarpDir", Vector3.zero);
-                grabbedAgent.GetComponentInChildren<SkinnedMeshRenderer>().material.SetVector(
-                        "_WarpCenter", 
-                        new Vector4(100, 100, 100, 0));
-                isGrabbing = false;
+                if(isGrabbing){
+                    HandleRelease();
+                    isGrabbing = false;
+                }
                 break;
             }
         }
 
         lastHandPos = transform.position;
+    }
+
+    void HandleRelease() {
+        grabbedAgent.GetComponent<Animator>().SetTrigger("next");
+        grabbedAgent.GetComponentInChildren<SkinnedMeshRenderer>().material.SetVector("_WarpDir", Vector3.zero);
+        grabbedAgent.GetComponentInChildren<SkinnedMeshRenderer>().material.SetVector(
+        "_WarpCenter", 
+        new Vector4(100, 100, 100, 0));
+    }
+
+    void HandleGrabHold() {
+        grabbedAgent.transform.position = lastGrabbedAgentPos;
+        Vector3 dif = transform.position - lastHandPos;
+        CCPlayer.localPlayer.transform.position -= dif.withY(0f);
+        grabbedAgent.GetComponentInChildren<SkinnedMeshRenderer>().material.SetVector("_WarpDir", 10f * dif);
     }
 }

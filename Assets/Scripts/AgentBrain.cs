@@ -85,10 +85,8 @@ public class AgentBrain : MonoBehaviour
 
   private void lookAt()
   {
-    Vector3 dir = (playerHead.position - headPos.position).normalized;
-    Quaternion newHeadRot = Quaternion.LookRotation(dir);
-
-    headPos.rotation = Quaternion.Lerp(lastHeadRot, newHeadRot, 2f * Time.deltaTime);
+    Quaternion targetQuat = getRotationTowardsClamped(headPos, playerHead.position, 90f);
+    headPos.rotation = Quaternion.Lerp(lastHeadRot, targetQuat, 2f * Time.deltaTime);
     lastHeadRot = headPos.rotation;
   }
 
@@ -97,4 +95,13 @@ public class AgentBrain : MonoBehaviour
     headPos.rotation = Quaternion.Lerp(lastHeadRot, headPos.rotation, 3f * Time.deltaTime);
     lastHeadRot = headPos.rotation;
   }
+
+  Quaternion getRotationTowardsClamped(Transform current, Vector3 targetPos, float constraint) {
+            Vector3 targetDir = (targetPos - current.position).normalized;
+
+            float angle = Vector3.SignedAngle(targetDir.withY(0f), current.forward.withY(0f), Vector3.up);
+            angle = Mathf.Clamp(angle, -constraint, constraint);
+
+            return Quaternion.AngleAxis(-angle, Vector3.up) * current.rotation;
+    }
 }

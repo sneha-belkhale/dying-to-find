@@ -1707,6 +1707,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hand: left
+  ovrHand: 0
   GrabState: 2
 --- !u!114 &758119471
 MonoBehaviour:
@@ -1720,7 +1721,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4ec2c52b3b5c478db68b1975c7efc8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  grabInput: {fileID: 758119470}
+  grabInput: {fileID: 758119472}
+--- !u!114 &758119472
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 758119469}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b8d1b9e8da064bed9216fd760f9813f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hand: left
+  GrabState: 2
 --- !u!1 &781305685
 GameObject:
   m_ObjectHideFlags: 0
@@ -2241,7 +2256,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4ec2c52b3b5c478db68b1975c7efc8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  grabInput: {fileID: 976782140}
+  grabInput: {fileID: 976782141}
 --- !u!114 &976782140
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2252,6 +2267,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4bab96a9800a74f57b6a34ad405854a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hand: right
+  ovrHand: 0
+  GrabState: 2
+--- !u!114 &976782141
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 976782138}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b8d1b9e8da064bed9216fd760f9813f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   hand: right
