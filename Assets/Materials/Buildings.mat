@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Morpheus
+  m_Name: Buildings
   m_Shader: {fileID: 4800000, guid: 762cfb24fae0a4c118a739037fb0f9d2, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
@@ -42,7 +42,7 @@ Material:
     - _MainTex:
         m_Texture: {fileID: 2800000, guid: 7915cd277c5c847c3b576c84e2feffad, type: 3}
         m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0.03, y: 1.25}
+        m_Offset: {x: 0.03, y: 0.25}
     - _MetallicGlossMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -64,11 +64,13 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _IgnoreGlobalFade: 1
-    - _IgnoreGlobalStretch: 1
+    - _IgnoreGlobalFade: 0
+    - _IgnoreGlobalStretch: 0
+    - _IgnoreGlobalStretchFrag: 1
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
+    - _Offset: 0
     - _Parallax: 0.02
     - _RimAmount: 0
     - _SmoothnessTextureChannel: 0
@@ -80,9 +82,9 @@ Material:
     - _ZWrite: 1
     m_Colors:
     - _AmbientLightColor: {r: 0, g: 0, b: 0, a: 1}
-    - _Color: {r: 0.3018868, g: 0.024219012, b: 0, a: 1}
+    - _Color: {r: 0, g: 0, b: 0, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _RimColor: {r: 0, g: 0, b: 0, a: 1}
-    - _VertOutVal: {r: 0, g: 0, b: 0, a: 0}
-    - _WarpCenter: {r: -0.64, g: 1.231, b: 18.944, a: 1}
+    - _VertOutVal: {r: 1, g: 1, b: 1, a: 1}
+    - _WarpCenter: {r: 0, g: 0, b: 0, a: 0}
     - _WarpDir: {r: 0, g: 0, b: 0, a: 0}

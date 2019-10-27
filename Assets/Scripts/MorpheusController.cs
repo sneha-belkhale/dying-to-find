@@ -5,6 +5,7 @@ using UnityEngine;
 public class MorpheusController : MonoBehaviour
 {
     private Material mat;
+    [SerializeField] GameObject ground;
 
     // Start is called before the first frame update
     void Start()
@@ -41,8 +42,28 @@ public class MorpheusController : MonoBehaviour
     }
 
     // Update is called once per frame
+    bool transitionComplete = false;
     void Update()
     {
+      if(Vector3.Distance(CCPlayer.localPlayer.transform.position, transform.position) < 5f && !transitionComplete) { 
+        //start fade out coroutine
+        StartCoroutine(MorpheusTransition());
+        transitionComplete = true;
+      }
+    }
 
+    IEnumerator MorpheusTransition() {
+      float stretch = Shader.GetGlobalFloat("_GlobalStretch");
+      yield return this.xuTween((float t) => {
+        Shader.SetGlobalFloat("_GlobalStretch", stretch + 3f * t);
+      }, 5f);
+      ground.SetActive(false); //fall
+      yield return this.xuTween((float t) => {
+        Vector3 pos = CCPlayer.localPlayer.transform.position;
+        pos.y -= 10f * t * Time.deltaTime;
+        CCPlayer.localPlayer.transform.position = pos;
+      }, 10f);
+      
+      yield return 0;
     }
 }

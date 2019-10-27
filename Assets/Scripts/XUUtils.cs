@@ -38,7 +38,7 @@ public static class XUExtensions
         {
             float t = Mathf.Clamp01((Time.time - startTime) / dur);
             tfunc(t);
-            yield return new WaitForEndOfFrame();
+            yield return 0;
         }
         //force call with 1
         tfunc(1);

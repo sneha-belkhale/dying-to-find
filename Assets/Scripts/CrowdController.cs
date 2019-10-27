@@ -10,7 +10,7 @@ public class CrowdController : MonoBehaviour
     int pMin = -5;
     int pMax = 5;
 
-  void InstantiateAgent(Vector3 pos)
+  void InstantiateAgent(Vector3 pos, int offset)
   {
     Transform newAgent = Instantiate(agent, pos, Quaternion.identity);
 
@@ -26,12 +26,9 @@ public class CrowdController : MonoBehaviour
     NavMeshAgent navMeshAgent = newAgent.GetComponent<NavMeshAgent>();
     navMeshAgent.speed = randomSpeed;
     navMeshAgent.enabled = true;
-  }
 
-  public void SpawnAgents()
-  {
-      Vector3 pos = new Vector3(Random.Range(pMin, pMax), 0.0f, 20.0f);
-      InstantiateAgent(pos);
+    AgentBrain brain = newAgent.GetComponent<AgentBrain>();
+    brain.SetOffset(offset);
 
   }
 
@@ -41,8 +38,11 @@ public class CrowdController : MonoBehaviour
     {
       for (int j = pMin; j < pMax; j++) {
         Vector3 pos = new Vector3(agent.position.x + i, agent.position.y, agent.position.z + j);
-        InstantiateAgent(pos);
+        InstantiateAgent(pos, i * (pMax - pMin) + j);
       }
     }
+  }
+
+  void Update(){
   }
 }

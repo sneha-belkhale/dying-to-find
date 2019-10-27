@@ -27,6 +27,15 @@ public class AgentBrain : MonoBehaviour
     lastHeadRot = headPos.rotation;
   }
 
+  public void SetOffset(int offset) {
+    Material mat = GetComponentInChildren<SkinnedMeshRenderer>().material;
+    mat.SetFloat("_Offset", offset);
+    if(offset % 4 == 0) {
+      mat.SetFloat("_IgnoreGlobalStretchFrag", 0);
+    } else {
+      mat.SetFloat("_IgnoreGlobalStretchFrag", 1);
+    }
+  }
   IEnumerator FadeOut() {
     float t = 0;
     float speed = Random.Range(0.8f, 1.4f);
@@ -64,8 +73,9 @@ public class AgentBrain : MonoBehaviour
     m_Agent.speed = Random.Range(0.4f, 0.9f);
     yield return StartCoroutine("FadeIn");
     transitioning = false;
-
   }
+
+  Coroutine glitchCoroutine = null;
   void LateUpdate()
   {
     if (Vector3.Distance(transform.position, goal.position) < 8 && !transitioning)
@@ -97,11 +107,11 @@ public class AgentBrain : MonoBehaviour
   }
 
   Quaternion getRotationTowardsClamped(Transform current, Vector3 targetPos, float constraint) {
-            Vector3 targetDir = (targetPos - current.position).normalized;
+          Vector3 targetDir = (targetPos - current.position).normalized;
 
-            float angle = Vector3.SignedAngle(targetDir.withY(0f), current.forward.withY(0f), Vector3.up);
-            angle = Mathf.Clamp(angle, -constraint, constraint);
+          float angle = Vector3.SignedAngle(targetDir.withY(0f), current.forward.withY(0f), Vector3.up);
+          angle = Mathf.Clamp(angle, -constraint, constraint);
 
-            return Quaternion.AngleAxis(-angle, Vector3.up) * current.rotation;
-    }
+          return Quaternion.AngleAxis(-angle, Vector3.up) * current.rotation;
+  }
 }

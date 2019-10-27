@@ -8,6 +8,9 @@
         _WarpDir ("Warp direction", Vector) = (0,0,0,0)
         _WarpCenter ("Warp center", Vector) = (0,0,0,0)
         _Color ("Color", Color) = (0,0,0,0)
+        _Offset ("Offset ID", Range(0, 1)) = 0.0
+        [FloatToggle]_IgnoreGlobalStretch("Ignore Global Stretch?", Float) = 0
+        [FloatToggle]_IgnoreGlobalStretchFrag("Ignore Global Stretch?", Float) = 0
     }
     SubShader
     {
@@ -45,11 +48,21 @@
             float4 _WarpCenter;
             float4 _WarpDir;
 
+            float _IgnoreGlobalStretch;
+            float _IgnoreGlobalStretchFrag;
+            float _GlobalStretch;
+            float _Offset;
+
             v2f vert (appdata v)
             {
                 v2f o;
                 float dissolve = tex2Dlod(_MainTex, float4(v.uv, 0,0)).r;
                 v.vertex.xyz += _VertOutVal.w * 3 * _FadeOutVal *  dissolve * _VertOutVal.xyz;
+
+                // half usingGlobalFade = step(0.001, _GlobalFadeOut) * (1 - _IgnoreGlobalFade);
+                // float fadeOutVal = lerp(_FadeOutVal, _GlobalFadeOut, usingGlobalFade);
+
+                v.vertex.y *= (1 + (1 - _IgnoreGlobalStretch) * _GlobalStretch);
 
                 float3 vWorldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
 
@@ -68,10 +81,11 @@
                 // sample the dissolve texture
                 fixed4 col = _Color;
 
-                float dissolve = tex2D(_MainTex, i.uv).r;
+                half usingGlobalStretch = step(0.001, _GlobalStretch) * (1 - _IgnoreGlobalStretchFrag);
+                float dissolve = tex2D(_MainTex, fixed2(i.uv.x + usingGlobalStretch * (1 + sin(_Offset + 0.2 *_Time.y)),i.uv.y)).r;
                 // float dissolveScroll = tex2D(_MainTex2, 0.1 * _UvScale * IN.uv_MainTex + 0.5 * cos(0.5*_Time.y)).r;
                 // finalWireframe *= clamp(dissolve - _FadeOutVal, 0, 1);
-                float isVisible = dissolve - _FadeOutVal;
+                float isVisible = dissolve - max(_FadeOutVal, usingGlobalStretch * _GlobalStretch * 0.1);
                 clip(isVisible);
 
                 float isGlowing = smoothstep(0.15, 0.01, isVisible);

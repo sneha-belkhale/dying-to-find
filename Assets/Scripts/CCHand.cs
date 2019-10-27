@@ -9,8 +9,10 @@ public class CCHand : MonoBehaviour
     GameObject grabbedAgent;
     Vector3 lastGrabbedAgentPos;
     Vector3 lastHandPos;
+    List<Vector3> lastHandDifs = new List<Vector3>();
+    int currentDifIdx = 0;
     Vector3 lastClosestPoint;
-    bool isGrabbing = false;
+    public bool isGrabbing = false;
     Collider[] results = new Collider[5];
     public void LateUpdate(){
 
@@ -35,9 +37,11 @@ public class CCHand : MonoBehaviour
                     grabbedAgent.GetComponentInChildren<SkinnedMeshRenderer>().material.SetVector(
                         "_WarpCenter", 
                         new Vector4(lastClosestPoint.x, lastClosestPoint.y, lastClosestPoint.z, 100));
+                    // grabbedAgent.GetComponentInChildren<SkinnedMeshRenderer>().material.SetFloat("_IgnoreGlobalStretch", 1);
                     lastGrabbedAgentPos = grabbedAgent.transform.position;
                     grabInput.TriggerHaptics();
                     isGrabbing = true;
+                    Time.timeScale = 0.3f;
                 } else {
                     isGrabbing = false;
                 }
@@ -46,7 +50,7 @@ public class CCHand : MonoBehaviour
             case GrabState.Holding: {
                 if(isGrabbing){
                     // check if player somehow got too far 
-                    if(Vector3.Distance(CCPlayer.localPlayer.transform.position, grabbedAgent.transform.position) > 2f){
+                    if(Vector3.Distance(CCPlayer.localPlayer.transform.position, grabbedAgent.transform.position) > 4f){
                         isGrabbing = false;
                         HandleRelease();
                     } else {
@@ -57,8 +61,8 @@ public class CCHand : MonoBehaviour
             }
             case GrabState.Released: {
                 if(isGrabbing){
-                    HandleRelease();
                     isGrabbing = false;
+                    HandleRelease();
                 }
                 break;
             }
@@ -73,12 +77,54 @@ public class CCHand : MonoBehaviour
         grabbedAgent.GetComponentInChildren<SkinnedMeshRenderer>().material.SetVector(
         "_WarpCenter", 
         new Vector4(100, 100, 100, 0));
+        //push you forward a bit in the last direction 
+        StartCoroutine(forwardMomentum());          
     }
 
     void HandleGrabHold() {
         grabbedAgent.transform.position = lastGrabbedAgentPos;
-        Vector3 dif = transform.position - lastHandPos;
-        CCPlayer.localPlayer.transform.position -= dif.withY(0f);
-        grabbedAgent.GetComponentInChildren<SkinnedMeshRenderer>().material.SetVector("_WarpDir", 10f * dif);
+
+        Vector3 lastHandDif = transform.position - lastHandPos;
+        AddToList(lastHandDif);
+
+        CCPlayer.localPlayer.transform.position -= lastHandDif.withY(0);
+        grabbedAgent.GetComponentInChildren<SkinnedMeshRenderer>().material.SetVector("_WarpDir", 10f * lastHandDif);
+
+        // float stretch = Shader.GetGlobalFloat("_GlobalStretch");
+        // Shader.SetGlobalFloat("_GlobalStretch", Mathf.Min(stretch + 0.25f * Time.deltaTime, 3f));
+    }
+
+    void AddToList(Vector3 el) {
+        lastHandDifs.Insert(0, el);
+        if (lastHandDifs.Count > 3) {
+            lastHandDifs.RemoveAt(3);
+        }
+    }
+
+    IEnumerator forwardMomentum () {
+        // bool shouldUnStretch = !CCPlayer.localPlayer.leftHand.isGrabbing && !CCPlayer.localPlayer.rightHand.isGrabbing;
+        float stretch = Shader.GetGlobalFloat("_GlobalStretch");
+        yield return this.xuTween((float rawT) => {
+            float t = Easing.Cubic.In(rawT);
+            // float t2 = Easing.Elastic.InOut(rawT);
+            CCPlayer.localPlayer.transform.position -= (1f - t) * getAverageHandDif().withY(0);
+            Time.timeScale = 0.3f + 0.7f * rawT;
+            // if(shouldUnStretch){
+            //     Shader.SetGlobalFloat("_GlobalStretch", (1f - t2) * stretch);
+            // }
+        }, 0.2f);
+        // grabbedAgent.GetComponentInChildren<SkinnedMeshRenderer>().material.SetFloat("_IgnoreGlobalStretch", 0);
+        lastHandDifs.Clear();  
+        yield return 0;
+    }
+
+    Vector3 getAverageHandDif() {
+        Vector3 average = Vector3.zero;
+        if(lastHandDifs.Count == 0) return average;
+
+        for(int i = 0; i < lastHandDifs.Count; i++){
+            average += lastHandDifs[i];
+        }
+        return average / lastHandDifs.Count;
     }
 }
