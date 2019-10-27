@@ -57,6 +57,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _BumpScale: 1
+    - _Cull: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
@@ -64,7 +65,9 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
+    - _IgnoreColor: 0
     - _IgnoreGlobalStretch: 0
+    - _IgnoreGlobalStretchFrag: 0
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
@@ -76,6 +79,7 @@ Material:
     - _SrcBlend: 1
     - _StepWidth: 0.01
     - _UVSec: 0
+    - _UsePointColor: 1
     - _VertOutVal: 0
     - _ZWrite: 1
     m_Colors:

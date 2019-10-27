@@ -2,20 +2,31 @@
 {
     Properties
     {
+        [Enum(UnityEngine.Rendering.CullMode)] _Cull ("Cull Mode", float) = 1.000000
+        [Space(5)]
+        [Header(Color)]
+        _Color ("Color", Color) = (0,0,0,0)
+        [Toggle]_UsePointColor("Use Point Color?", Float) = 0
         _MainTex ("Texture", 2D) = "white" {}
+
+        [Space(5)]
+        [Header(Effects)]
         _FadeOutVal ("Fade out percent", Range(0, 1)) = 0.0
         _VertOutVal ("Vert out direction", Vector) = (0,0,0,1)
         _WarpDir ("Warp direction", Vector) = (0,0,0,0)
         _WarpCenter ("Warp center", Vector) = (0,0,0,0)
-        _Color ("Color", Color) = (0,0,0,0)
+        [Toggle]_IgnoreGlobalStretch("Ignore Global Stretch?", Float) = 0
+        [Toggle]_IgnoreGlobalStretchFrag("Ignore Global Stretch Frag?", Float) = 0
         _Offset ("Offset ID", Range(0, 1)) = 0.0
-        [FloatToggle]_IgnoreGlobalStretch("Ignore Global Stretch?", Float) = 0
-        [FloatToggle]_IgnoreGlobalStretchFrag("Ignore Global Stretch?", Float) = 0
+
+
+
     }
     SubShader
     {
         Tags { "RenderType"="Opaque" }
         LOD 100
+        Cull [_Cull]
 
         Pass
         {
@@ -30,12 +41,14 @@
             struct appdata
             {
                 float4 vertex : POSITION;
+                float4 color : COLOR;
                 float2 uv : TEXCOORD0;
             };
 
             struct v2f
             {
                 float2 uv : TEXCOORD0;
+                float4 color : COLOR;
                 UNITY_FOG_COORDS(1)
                 float4 vertex : SV_POSITION;
             };
@@ -48,6 +61,7 @@
             float4 _WarpCenter;
             float4 _WarpDir;
 
+            float _UsePointColor;
             float _IgnoreGlobalStretch;
             float _IgnoreGlobalStretchFrag;
             float _GlobalStretch;
@@ -72,15 +86,14 @@
 
                 o.vertex = UnityWorldToClipPos(vWorldPos);
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
+                o.color = v.color;
                 UNITY_TRANSFER_FOG(o,o.vertex);
                 return o;
             }
 
             fixed4 frag (v2f i) : SV_Target
             {
-                // sample the dissolve texture
-                fixed4 col = _Color;
-
+                fixed4 col = lerp(_Color, i.color * _Color, _UsePointColor);
                 half usingGlobalStretch = step(0.001, _GlobalStretch) * (1 - _IgnoreGlobalStretchFrag);
                 float dissolve = tex2D(_MainTex, fixed2(i.uv.x + usingGlobalStretch * (1 + sin(_Offset + 0.2 *_Time.y)),i.uv.y)).r;
                 // float dissolveScroll = tex2D(_MainTex2, 0.1 * _UvScale * IN.uv_MainTex + 0.5 * cos(0.5*_Time.y)).r;

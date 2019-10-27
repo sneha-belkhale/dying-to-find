@@ -228,8 +228,8 @@ public class XUUtil
             set { rotation = Quaternion.LookRotation(value); }
         }
 
-   
-        
+
+
         public StoredTransform (Transform t)
         {
             this.position = t.position;
