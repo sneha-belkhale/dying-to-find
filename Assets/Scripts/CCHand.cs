@@ -31,17 +31,17 @@ public class CCHand : MonoBehaviour
                         lastClosestPoint = closestPoint;
                     }
                 }
-                if (minDist < 1f){
+                if (minDist < 0.2f){
                     grabbedAgent = results[minIdx].gameObject;
                     grabbedAgent.GetComponent<Animator>().SetTrigger("next");
                     grabbedAgent.GetComponentInChildren<SkinnedMeshRenderer>().material.SetVector(
                         "_WarpCenter", 
-                        new Vector4(lastClosestPoint.x, lastClosestPoint.y, lastClosestPoint.z, 100));
+                        new Vector4(lastClosestPoint.x, lastClosestPoint.y, lastClosestPoint.z, 25));
                     // grabbedAgent.GetComponentInChildren<SkinnedMeshRenderer>().material.SetFloat("_IgnoreGlobalStretch", 1);
                     lastGrabbedAgentPos = grabbedAgent.transform.position;
                     grabInput.TriggerHaptics();
                     isGrabbing = true;
-                    Time.timeScale = 0.3f;
+                    // Time.timeScale = 0.3f;
                 } else {
                     isGrabbing = false;
                 }
@@ -88,7 +88,8 @@ public class CCHand : MonoBehaviour
         AddToList(lastHandDif);
 
         CCPlayer.localPlayer.transform.position -= lastHandDif.withY(0);
-        grabbedAgent.GetComponentInChildren<SkinnedMeshRenderer>().material.SetVector("_WarpDir", 10f * lastHandDif);
+
+        grabbedAgent.GetComponentInChildren<SkinnedMeshRenderer>().material.SetVector("_WarpDir", 15f * lastHandDif);
 
         // float stretch = Shader.GetGlobalFloat("_GlobalStretch");
         // Shader.SetGlobalFloat("_GlobalStretch", Mathf.Min(stretch + 0.25f * Time.deltaTime, 3f));
@@ -104,15 +105,16 @@ public class CCHand : MonoBehaviour
     IEnumerator forwardMomentum () {
         // bool shouldUnStretch = !CCPlayer.localPlayer.leftHand.isGrabbing && !CCPlayer.localPlayer.rightHand.isGrabbing;
         float stretch = Shader.GetGlobalFloat("_GlobalStretch");
+        Vector3 avgHandDif = getAverageHandDif().withY(0);
         yield return this.xuTween((float rawT) => {
             float t = Easing.Cubic.In(rawT);
             // float t2 = Easing.Elastic.InOut(rawT);
-            CCPlayer.localPlayer.transform.position -= (1f - t) * getAverageHandDif().withY(0);
-            Time.timeScale = 0.3f + 0.7f * rawT;
+            CCPlayer.localPlayer.transform.position -= (1f - t) * avgHandDif;
+            // Time.timeScale = 0.3f + 0.7f * rawT;
             // if(shouldUnStretch){
             //     Shader.SetGlobalFloat("_GlobalStretch", (1f - t2) * stretch);
             // }
-        }, 0.2f);
+        }, 0.15f);
         // grabbedAgent.GetComponentInChildren<SkinnedMeshRenderer>().material.SetFloat("_IgnoreGlobalStretch", 0);
         lastHandDifs.Clear();  
         yield return 0;

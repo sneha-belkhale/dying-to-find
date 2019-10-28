@@ -9,7 +9,7 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: Morpheus
   m_Shader: {fileID: 4800000, guid: 762cfb24fae0a4c118a739037fb0f9d2, type: 3}
-  m_ShaderKeywords: 
+  m_ShaderKeywords: USE_EFFECTS
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -61,6 +61,7 @@ Material:
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
+    - _Effects: 1
     - _FadeOutVal: 0
     - _GlossMapScale: 1
     - _Glossiness: 0.5

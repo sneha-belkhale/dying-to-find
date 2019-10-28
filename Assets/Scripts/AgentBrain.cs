@@ -19,9 +19,12 @@ public class AgentBrain : MonoBehaviour
   public Transform playerLeftHand;
   public Transform playerHead;
 
+  public Transform sphere;
+
   void Start()
   {
     mat = GetComponentInChildren<SkinnedMeshRenderer>().material;
+    mat.SetColor("_Color", Random.Range(0f,0.1f)*Color.gray);
     m_Agent = GetComponent<NavMeshAgent>();
     m_Agent.destination = goal.position;
     lastHeadRot = headPos.rotation;
@@ -78,6 +81,14 @@ public class AgentBrain : MonoBehaviour
   Coroutine glitchCoroutine = null;
   void LateUpdate()
   {
+    //FOR DEBUGGING STRETCH EFFECT
+    // Vector3 closestPoint = GetComponent<CapsuleCollider>().ClosestPoint(sphere.transform.position);
+    // Vector3 dir = sphere.transform.position - closestPoint;
+    // GetComponentInChildren<SkinnedMeshRenderer>().material.SetVector("_WarpDir", dir);
+
+    // GetComponentInChildren<SkinnedMeshRenderer>().material.SetVector(
+    //                     "_WarpCenter", 
+    //                     new Vector4(closestPoint.x, closestPoint.y, closestPoint.z, 50));
     if (Vector3.Distance(transform.position, goal.position) < 8 && !transitioning)
     {
       StartCoroutine("DoTransition");

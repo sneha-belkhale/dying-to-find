@@ -11,10 +11,12 @@
 
         [Space(5)]
         [Header(Effects)]
+        [Toggle(USE_EFFECTS)] _Effects("Use Effects", Float) = 1
         _FadeOutVal ("Fade out percent", Range(0, 1)) = 0.0
         _VertOutVal ("Vert out direction", Vector) = (0,0,0,1)
         _WarpDir ("Warp direction", Vector) = (0,0,0,0)
         _WarpCenter ("Warp center", Vector) = (0,0,0,0)
+
         [Toggle]_IgnoreGlobalStretch("Ignore Global Stretch?", Float) = 0
         [Toggle]_IgnoreGlobalStretchFrag("Ignore Global Stretch Frag?", Float) = 0
         _Offset ("Offset ID", Range(0, 1)) = 0.0
@@ -35,6 +37,7 @@
             #pragma fragment frag
             // make fog work
             #pragma multi_compile_fog
+            #pragma shader_feature USE_EFFECTS
 
             #include "UnityCG.cginc"
 
@@ -56,10 +59,13 @@
             sampler2D _MainTex;
             float4 _MainTex_ST;
             float4 _Color;
-            float _FadeOutVal;
-            float4 _VertOutVal;
-            float4 _WarpCenter;
-            float4 _WarpDir;
+
+            #if (USE_EFFECTS)
+                float _FadeOutVal;
+                float4 _VertOutVal;
+                float4 _WarpCenter;
+                float4 _WarpDir;
+            #endif
 
             float _UsePointColor;
             float _IgnoreGlobalStretch;
@@ -70,19 +76,21 @@
             v2f vert (appdata v)
             {
                 v2f o;
-                float dissolve = tex2Dlod(_MainTex, float4(v.uv, 0,0)).r;
-                v.vertex.xyz += _VertOutVal.w * 3 * _FadeOutVal *  dissolve * _VertOutVal.xyz;
-
-                // half usingGlobalFade = step(0.001, _GlobalFadeOut) * (1 - _IgnoreGlobalFade);
-                // float fadeOutVal = lerp(_FadeOutVal, _GlobalFadeOut, usingGlobalFade);
-
-                v.vertex.y *= (1 + (1 - _IgnoreGlobalStretch) * _GlobalStretch);
+                #if (USE_EFFECTS)
+                    float dissolve = tex2Dlod(_MainTex, float4(v.uv, 0,0)).r;
+                    v.vertex.xyz += _VertOutVal.w * 3 * _FadeOutVal *  dissolve * _VertOutVal.xyz;
+                    // half usingGlobalFade = step(0.001, _GlobalFadeOut) * (1 - _IgnoreGlobalFade);
+                    // float fadeOutVal = lerp(_FadeOutVal, _GlobalFadeOut, usingGlobalFade);
+                    v.vertex.y *= (1 + (1 - _IgnoreGlobalStretch) * _GlobalStretch);
+                #endif
 
                 float3 vWorldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
 
-                float dist = (vWorldPos - _WarpCenter.xyz);
-                half radialFalloff = min(dot(dist, dist) * _WarpCenter.w, 1);
-                vWorldPos += (1-radialFalloff) * _WarpDir.xyz;
+                #if (USE_EFFECTS)
+                    float3 dist = (vWorldPos - _WarpCenter.xyz);
+                    half radialFalloff = min(dot(dist, dist) * _WarpCenter.w, 1);
+                    vWorldPos += (1-radialFalloff) * _WarpDir.xyz;
+                #endif
 
                 o.vertex = UnityWorldToClipPos(vWorldPos);
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
@@ -94,15 +102,17 @@
             fixed4 frag (v2f i) : SV_Target
             {
                 fixed4 col = lerp(_Color, i.color * _Color, _UsePointColor);
-                half usingGlobalStretch = step(0.001, _GlobalStretch) * (1 - _IgnoreGlobalStretchFrag);
-                float dissolve = tex2D(_MainTex, fixed2(i.uv.x + usingGlobalStretch * (1 + sin(_Offset + 0.2 *_Time.y)),i.uv.y)).r;
-                // float dissolveScroll = tex2D(_MainTex2, 0.1 * _UvScale * IN.uv_MainTex + 0.5 * cos(0.5*_Time.y)).r;
-                // finalWireframe *= clamp(dissolve - _FadeOutVal, 0, 1);
-                float isVisible = dissolve - max(_FadeOutVal, usingGlobalStretch * _GlobalStretch * 0.1);
-                clip(isVisible);
 
-                float isGlowing = smoothstep(0.15, 0.01, isVisible);
-                col += _FadeOutVal * isGlowing * fixed4(0.5,0.5,0.5,1);
+                #if (USE_EFFECTS)
+                    half usingGlobalStretch = step(0.001, _GlobalStretch) * (1 - _IgnoreGlobalStretchFrag);
+                    float dissolve = tex2D(_MainTex, fixed2(i.uv.x + usingGlobalStretch * (1 + sin(_Offset + 0.2 *_Time.y)),i.uv.y)).r;
+                    // float dissolveScroll = tex2D(_MainTex2, 0.1 * _UvScale * IN.uv_MainTex + 0.5 * cos(0.5*_Time.y)).r;
+                    // finalWireframe *= clamp(dissolve - _FadeOutVal, 0, 1);
+                    float isVisible = dissolve - max(_FadeOutVal, usingGlobalStretch * _GlobalStretch * 0.1);
+                    clip(isVisible);
+                    float isGlowing = smoothstep(0.15, 0.01, isVisible);
+                    col += _FadeOutVal * isGlowing * fixed4(0.5,0.5,0.5,1);
+                #endif
 
                 // apply fog
                 UNITY_APPLY_FOG(i.fogCoord, col);
