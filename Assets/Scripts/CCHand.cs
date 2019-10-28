@@ -14,8 +14,8 @@ public class CCHand : MonoBehaviour
     Vector3 lastClosestPoint;
     public bool isGrabbing = false;
     Collider[] results = new Collider[5];
-    public void LateUpdate(){
 
+    public void LateUpdate(){
         switch(grabInput.GrabState){
             case GrabState.Down : {
                 int length = Physics.OverlapSphereNonAlloc(transform.position, 0.4f, results);
@@ -68,7 +68,7 @@ public class CCHand : MonoBehaviour
             }
         }
 
-        lastHandPos = transform.position;
+        lastHandPos = transform.localPosition;
     }
 
     void HandleRelease() {
@@ -84,11 +84,10 @@ public class CCHand : MonoBehaviour
     void HandleGrabHold() {
         grabbedAgent.transform.position = lastGrabbedAgentPos;
 
-        Vector3 lastHandDif = transform.position - lastHandPos;
+        Vector3 lastHandDif = transform.parent.TransformDirection(transform.localPosition - lastHandPos);
         AddToList(lastHandDif);
 
         CCPlayer.localPlayer.transform.position -= lastHandDif.withY(0);
-
         grabbedAgent.GetComponentInChildren<SkinnedMeshRenderer>().material.SetVector("_WarpDir", 15f * lastHandDif);
 
         // float stretch = Shader.GetGlobalFloat("_GlobalStretch");
