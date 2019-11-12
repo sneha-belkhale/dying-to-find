@@ -24,7 +24,7 @@ public class AgentBrain : MonoBehaviour
   void Start()
   {
     mat = GetComponentInChildren<SkinnedMeshRenderer>().material;
-    mat.SetColor("_Color", Random.Range(0f,0.1f)*Color.gray);
+    mat.SetColor("_Color", Random.Range(0f,0.2f)*Color.gray);
     m_Agent = GetComponent<NavMeshAgent>();
     m_Agent.destination = goal.position;
     lastHeadRot = headPos.rotation;

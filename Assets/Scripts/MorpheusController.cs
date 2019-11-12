@@ -62,7 +62,8 @@ public class MorpheusController : MonoBehaviour
 
       yield return this.xuTween((float t) => {
         portalOfAnswerMat.material.SetFloat("_holeDiameter", 0.314f * t);
-      }, 5f);
+        Shader.SetGlobalFloat("_GlobalStretch", stretch + 1f * t);
+      }, 10f);
       // yield return this.xuTween((float t) => {
       //   Shader.SetGlobalFloat("_GlobalStretch", stretch + 3f * t);
       // }, 5f);
@@ -78,9 +79,12 @@ public class MorpheusController : MonoBehaviour
         }
         Vector3 pos = CCPlayer.localPlayer.transform.position;
         float vel = lastVelocity + acceleration * Time.deltaTime;
-        pos.y -= 20f * 0.2f * Time.deltaTime;
+        pos.y -= (4f + 3f * t) * Time.deltaTime;
         lastVelocity = vel;
         CCPlayer.localPlayer.transform.position = pos;
+
+        Shader.SetGlobalFloat("_GlobalStretch", stretch + 1f * t + 1f);
+
       }, 30f);
       portalOfAnswerMat.gameObject.SetActive(false);
       yield return 0;

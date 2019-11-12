@@ -69,6 +69,7 @@ Material:
     - _IgnoreColor: 0
     - _IgnoreGlobalStretch: 0
     - _IgnoreGlobalStretchFrag: 0
+    - _Leveling: 0
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
@@ -80,7 +81,7 @@ Material:
     - _SrcBlend: 1
     - _StepWidth: 0.01
     - _UVSec: 0
-    - _UsePointColor: 1
+    - _UsePointColor: 0
     - _VertOutVal: 0
     - _ZWrite: 1
     m_Colors:
