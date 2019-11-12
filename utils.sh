@@ -1,5 +1,5 @@
 cmd=$1
-app_name="com.codercat.VRTemplate"
+app_name="com.codercat.DyingToFind"
 
 case $cmd in
   "init")
