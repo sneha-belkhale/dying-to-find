@@ -16,6 +16,7 @@
         _VertOutVal ("Vert out direction", Vector) = (0,0,0,1)
         _WarpDir ("Warp direction", Vector) = (0,0,0,0)
         _WarpCenter ("Warp center", Vector) = (0,0,0,0)
+        [Toggle(USE_LEVELING)] _Leveling("Use Leveling", Float) = 1
 
         [Toggle]_IgnoreGlobalStretch("Ignore Global Stretch?", Float) = 0
         [Toggle]_IgnoreGlobalStretchFrag("Ignore Global Stretch Frag?", Float) = 0
@@ -38,6 +39,7 @@
             // make fog work
             #pragma multi_compile_fog
             #pragma shader_feature USE_EFFECTS
+            #pragma shader_feature USE_LEVELING
 
             #include "UnityCG.cginc"
 
@@ -67,6 +69,10 @@
                 float4 _WarpDir;
             #endif
 
+            #if (USE_LEVELING)
+                float _LevelAmt;
+            #endif
+
             float _UsePointColor;
             float _IgnoreGlobalStretch;
             float _IgnoreGlobalStretchFrag;
@@ -76,6 +82,11 @@
             v2f vert (appdata v)
             {
                 v2f o;
+
+                #if (USE_LEVELING)
+                    v.vertex.y *= (1 + 0.5 * _LevelAmt * sin(0.5 * _Time.y + floor(0.1 * v.vertex.z)));
+                #endif
+
                 #if (USE_EFFECTS)
                     float dissolve = tex2Dlod(_MainTex, float4(v.uv, 0,0)).r;
                     v.vertex.xyz += _VertOutVal.w * 3 * _FadeOutVal *  dissolve * _VertOutVal.xyz;

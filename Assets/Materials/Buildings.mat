@@ -9,7 +9,7 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: Buildings
   m_Shader: {fileID: 4800000, guid: 762cfb24fae0a4c118a739037fb0f9d2, type: 3}
-  m_ShaderKeywords: _USEPOINTCOLOR_ON
+  m_ShaderKeywords: USE_EFFECTS USE_LEVELING _IGNOREGLOBALSTRETCHFRAG_ON _USEPOINTCOLOR_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -61,7 +61,7 @@ Material:
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
-    - _Effects: 0
+    - _Effects: 1
     - _FadeOutVal: 0
     - _GlossMapScale: 1
     - _Glossiness: 0.5
@@ -69,7 +69,9 @@ Material:
     - _IgnoreColor: 0
     - _IgnoreGlobalFade: 0
     - _IgnoreGlobalStretch: 0
-    - _IgnoreGlobalStretchFrag: 0
+    - _IgnoreGlobalStretchFrag: 1
+    - _LevelAmt: 0.774
+    - _Leveling: 1
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1

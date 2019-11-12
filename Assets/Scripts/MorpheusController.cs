@@ -5,7 +5,8 @@ using UnityEngine;
 public class MorpheusController : MonoBehaviour
 {
     private Material mat;
-    [SerializeField] GameObject ground;
+    [SerializeField] Renderer groundMat;
+    [SerializeField] Renderer portalOfAnswerMat;
 
     // Start is called before the first frame update
     void Start()
@@ -47,23 +48,63 @@ public class MorpheusController : MonoBehaviour
     {
       if(Vector3.Distance(CCPlayer.localPlayer.transform.position, transform.position) < 5f && !transitionComplete) { 
         //start fade out coroutine
-        StartCoroutine(MorpheusTransition());
+        StartCoroutine(MorpheusTransition2());
         transitionComplete = true;
       }
     }
+  IEnumerator MorpheusTransition2() {
+      float stretch = Shader.GetGlobalFloat("_GlobalStretch");
+      yield return this.xuTween((float t) => {
+        Shader.SetGlobalFloat("_LevelAmt", t);
+      }, 2f);
 
+      portalOfAnswerMat.gameObject.GetComponent<MeshFilter>().sharedMesh.bounds = new Bounds(Vector3.zero, Vector3.one * 400f);
+
+      yield return this.xuTween((float t) => {
+        portalOfAnswerMat.material.SetFloat("_holeDiameter", 0.314f * t);
+      }, 5f);
+      // yield return this.xuTween((float t) => {
+      //   Shader.SetGlobalFloat("_GlobalStretch", stretch + 3f * t);
+      // }, 5f);
+      // ground.SetActive(false); //fall
+      // RenderSettings.fogColor = Color.black;
+      bool setFog = false;
+      float lastVelocity = 1f;
+      float acceleration = 0.02f;
+      yield return this.xuTween((float t) => {
+        if(t > 0.04 && !setFog){
+          RenderSettings.fogColor = Color.black;
+          setFog = true;
+        }
+        Vector3 pos = CCPlayer.localPlayer.transform.position;
+        float vel = lastVelocity + acceleration * Time.deltaTime;
+        pos.y -= 20f * 0.2f * Time.deltaTime;
+        lastVelocity = vel;
+        CCPlayer.localPlayer.transform.position = pos;
+      }, 30f);
+      portalOfAnswerMat.gameObject.SetActive(false);
+      yield return 0;
+    }
     IEnumerator MorpheusTransition() {
       float stretch = Shader.GetGlobalFloat("_GlobalStretch");
       yield return this.xuTween((float t) => {
+        Shader.SetGlobalFloat("_LevelAmt", t);
+      }, 20f);
+      yield return this.xuTween((float t) => {
         Shader.SetGlobalFloat("_GlobalStretch", stretch + 3f * t);
       }, 5f);
-      ground.SetActive(false); //fall
+      groundMat.gameObject.SetActive(false); //fall
       yield return this.xuTween((float t) => {
         Vector3 pos = CCPlayer.localPlayer.transform.position;
-        pos.y -= 10f * t * Time.deltaTime;
+        pos.y -= 20f * t * Time.deltaTime;
         CCPlayer.localPlayer.transform.position = pos;
-      }, 10f);
+      }, 30f);
       
       yield return 0;
+    }
+
+    void OnDestroy(){
+      Shader.SetGlobalFloat("_LevelAmt", 0f);
+      Shader.SetGlobalFloat("_GlobalStretch", 0f);
     }
 }
