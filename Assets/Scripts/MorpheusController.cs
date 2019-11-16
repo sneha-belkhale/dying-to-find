@@ -46,29 +46,30 @@ public class MorpheusController : MonoBehaviour
     bool transitionComplete = false;
     void Update()
     {
-      if(Vector3.Distance(CCPlayer.localPlayer.transform.position, transform.position) < 5f && !transitionComplete) { 
+      if(Vector3.Distance(CCPlayer.localPlayer.transform.position, transform.position) < 2f && !transitionComplete) { 
         //start fade out coroutine
-        StartCoroutine(MorpheusTransition2());
+        StartCoroutine(MorpheusTransition());
         transitionComplete = true;
       }
     }
-  IEnumerator MorpheusTransition2() {
+  IEnumerator MorpheusTransition() {
       float stretch = Shader.GetGlobalFloat("_GlobalStretch");
       yield return this.xuTween((float t) => {
         Shader.SetGlobalFloat("_LevelAmt", t);
       }, 2f);
 
       portalOfAnswerMat.gameObject.GetComponent<MeshFilter>().sharedMesh.bounds = new Bounds(Vector3.zero, Vector3.one * 400f);
-
+      this.xuTween((float t) => {
+        // float eT = Easing.Circular.InOut(t);
+        portalOfAnswerMat.material.SetFloat("_growth", t);
+      }, 15f);
+      yield return new WaitForSeconds(8f);
       yield return this.xuTween((float t) => {
-        portalOfAnswerMat.material.SetFloat("_holeDiameter", 0.314f * t);
+        float eT = Easing.Cubic.In(t);
+        portalOfAnswerMat.material.SetFloat("_holeDiameter", 0.314f * eT);
         Shader.SetGlobalFloat("_GlobalStretch", stretch + 1f * t);
       }, 10f);
-      // yield return this.xuTween((float t) => {
-      //   Shader.SetGlobalFloat("_GlobalStretch", stretch + 3f * t);
-      // }, 5f);
-      // ground.SetActive(false); //fall
-      // RenderSettings.fogColor = Color.black;
+
       bool setFog = false;
       float lastVelocity = 1f;
       float acceleration = 0.02f;
@@ -89,24 +90,6 @@ public class MorpheusController : MonoBehaviour
       portalOfAnswerMat.gameObject.SetActive(false);
       yield return 0;
     }
-    IEnumerator MorpheusTransition() {
-      float stretch = Shader.GetGlobalFloat("_GlobalStretch");
-      yield return this.xuTween((float t) => {
-        Shader.SetGlobalFloat("_LevelAmt", t);
-      }, 20f);
-      yield return this.xuTween((float t) => {
-        Shader.SetGlobalFloat("_GlobalStretch", stretch + 3f * t);
-      }, 5f);
-      groundMat.gameObject.SetActive(false); //fall
-      yield return this.xuTween((float t) => {
-        Vector3 pos = CCPlayer.localPlayer.transform.position;
-        pos.y -= 20f * t * Time.deltaTime;
-        CCPlayer.localPlayer.transform.position = pos;
-      }, 30f);
-      
-      yield return 0;
-    }
-
     void OnDestroy(){
       Shader.SetGlobalFloat("_LevelAmt", 0f);
       Shader.SetGlobalFloat("_GlobalStretch", 0f);
