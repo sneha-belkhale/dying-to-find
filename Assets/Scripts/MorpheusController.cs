@@ -87,7 +87,7 @@ public class MorpheusController : MonoBehaviour
 
       }, 30f);
       portalOfAnswerMat.gameObject.SetActive(false);
-      CCSceneUtils.instance.StartCoroutine(CCSceneUtils.DoFadeSceneLoadCoroutine("UnderWorldScene","SampleScene"));
+      CCSceneUtils.instance.StartCoroutine(CCSceneUtils.DoFadeSceneLoadCoroutine("UnderWorldScene","CrowdScene"));
 
       yield return 0;
     }
