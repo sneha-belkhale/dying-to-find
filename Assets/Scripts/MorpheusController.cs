@@ -71,23 +71,24 @@ public class MorpheusController : MonoBehaviour
       }, 10f);
 
       bool setFog = false;
-      float lastVelocity = 1f;
-      float acceleration = 0.02f;
+      float holeDiam = 0.314f;
       yield return this.xuTween((float t) => {
         if(t > 0.04 && !setFog){
           RenderSettings.fogColor = Color.black;
           setFog = true;
         }
         Vector3 pos = CCPlayer.localPlayer.transform.position;
-        float vel = lastVelocity + acceleration * Time.deltaTime;
         pos.y -= (4f + 3f * t) * Time.deltaTime;
-        lastVelocity = vel;
         CCPlayer.localPlayer.transform.position = pos;
 
         Shader.SetGlobalFloat("_GlobalStretch", stretch + 1f * t + 1f);
+        holeDiam += Time.deltaTime/(10f + 1000 * t);
+        portalOfAnswerMat.material.SetFloat("_holeDiameter", holeDiam);
 
       }, 30f);
       portalOfAnswerMat.gameObject.SetActive(false);
+      CCSceneUtils.instance.StartCoroutine(CCSceneUtils.DoFadeSceneLoadCoroutine("UnderWorldScene","SampleScene"));
+
       yield return 0;
     }
     void OnDestroy(){

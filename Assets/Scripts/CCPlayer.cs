@@ -8,6 +8,7 @@ public class CCPlayer : MonoBehaviour
   public static CCPlayer localPlayer;
   public CCHand leftHand;
   public CCHand rightHand;
+  public Transform head;
 
   public float globalScaleVal = 0;
 

@@ -15,10 +15,6 @@ public class AgentBrain : MonoBehaviour
 
   public Transform goal;
   public Transform headPos;
-  public Transform playerRightHand;
-  public Transform playerLeftHand;
-  public Transform playerHead;
-
   public Transform sphere;
 
   void Start()
@@ -95,8 +91,8 @@ public class AgentBrain : MonoBehaviour
       transitioning = true;
     }
 
-    if((playerRightHand.position - headPos.position).magnitude < handCollisionRadius ||
-       (playerLeftHand.position - headPos.position).magnitude < handCollisionRadius)
+    if((CCPlayer.localPlayer.rightHand.transform.position - headPos.position).magnitude < handCollisionRadius ||
+       (CCPlayer.localPlayer.leftHand.transform.position - headPos.position).magnitude < handCollisionRadius)
     {
       lookAt();
     } else {
@@ -106,7 +102,7 @@ public class AgentBrain : MonoBehaviour
 
   private void lookAt()
   {
-    Quaternion targetQuat = getRotationTowardsClamped(headPos, playerHead.position, 90f);
+    Quaternion targetQuat = getRotationTowardsClamped(headPos, CCPlayer.localPlayer.head.transform.position, 90f);
     headPos.rotation = Quaternion.Lerp(lastHeadRot, targetQuat, 2f * Time.deltaTime);
     lastHeadRot = headPos.rotation;
   }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 
 public class CrowdController : MonoBehaviour
 {
@@ -12,7 +13,7 @@ public class CrowdController : MonoBehaviour
 
   void InstantiateAgent(Vector3 pos, int offset)
   {
-    Transform newAgent = Instantiate(agent, pos, Quaternion.identity);
+    Transform newAgent = Instantiate(agent, pos, Quaternion.identity, CCSceneUtils.instance.instantiatedObjectRoot);
 
     float randomScale = Random.Range(1f, 1.2f);
 
