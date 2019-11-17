@@ -42,6 +42,7 @@ public class CrowdController : MonoBehaviour
         InstantiateAgent(pos, i * (pMax - pMin) + j);
       }
     }
+    agent.gameObject.SetActive(false);
   }
 
   void Update(){

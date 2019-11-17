@@ -7,12 +7,17 @@ public class MorpheusController : MonoBehaviour
     private Material mat;
     [SerializeField] Renderer groundMat;
     [SerializeField] Renderer portalOfAnswerMat;
+    [SerializeField] Transform envSounds;
+    AudioSource[] envAudios;
+    [SerializeField] AudioSource iceCrack;
 
     // Start is called before the first frame update
     void Start()
     {
       mat = GetComponentInChildren<SkinnedMeshRenderer>().material;
       StartCoroutine(Glitch());
+
+      envAudios = envSounds.GetComponents<AudioSource>();
     }
 
     IEnumerator Glitch()
@@ -56,13 +61,17 @@ public class MorpheusController : MonoBehaviour
       float stretch = Shader.GetGlobalFloat("_GlobalStretch");
       yield return this.xuTween((float t) => {
         Shader.SetGlobalFloat("_LevelAmt", t);
-      }, 2f);
+      }, 7f);
 
       portalOfAnswerMat.gameObject.GetComponent<MeshFilter>().sharedMesh.bounds = new Bounds(Vector3.zero, Vector3.one * 400f);
       this.xuTween((float t) => {
-        // float eT = Easing.Circular.InOut(t);
         portalOfAnswerMat.material.SetFloat("_growth", t);
+        foreach(var audio in envAudios){
+          audio.pitch = 1f - 0.75f * t;
+        }
+        Time.timeScale = 1f - 0.5f * t;
       }, 15f);
+      iceCrack.PlayDelayed(2f);
       yield return new WaitForSeconds(8f);
       yield return this.xuTween((float t) => {
         float eT = Easing.Cubic.In(t);
@@ -72,17 +81,18 @@ public class MorpheusController : MonoBehaviour
 
       bool setFog = false;
       float holeDiam = 0.314f;
+      
       yield return this.xuTween((float t) => {
         if(t > 0.04 && !setFog){
           RenderSettings.fogColor = Color.black;
           setFog = true;
         }
         Vector3 pos = CCPlayer.localPlayer.transform.position;
-        pos.y -= (4f + 3f * t) * Time.deltaTime;
+        pos.y -= (4f + 3f * t) * 2f * Time.deltaTime;
         CCPlayer.localPlayer.transform.position = pos;
 
         Shader.SetGlobalFloat("_GlobalStretch", stretch + 1f * t + 1f);
-        holeDiam += Time.deltaTime/(10f + 1000 * t);
+        holeDiam += 2f * Time.deltaTime/(10f + 1000 * t);
         portalOfAnswerMat.material.SetFloat("_holeDiameter", holeDiam);
 
       }, 30f);

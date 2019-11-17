@@ -102,19 +102,12 @@ public class CCHand : MonoBehaviour
     }
 
     IEnumerator forwardMomentum () {
-        // bool shouldUnStretch = !CCPlayer.localPlayer.leftHand.isGrabbing && !CCPlayer.localPlayer.rightHand.isGrabbing;
         float stretch = Shader.GetGlobalFloat("_GlobalStretch");
         Vector3 avgHandDif = getAverageHandDif().withY(0);
         yield return this.xuTween((float rawT) => {
             float t = Easing.Cubic.In(rawT);
-            // float t2 = Easing.Elastic.InOut(rawT);
             CCPlayer.localPlayer.transform.position -= (1f - t) * avgHandDif;
-            // Time.timeScale = 0.3f + 0.7f * rawT;
-            // if(shouldUnStretch){
-            //     Shader.SetGlobalFloat("_GlobalStretch", (1f - t2) * stretch);
-            // }
         }, 0.15f);
-        // grabbedAgent.GetComponentInChildren<SkinnedMeshRenderer>().material.SetFloat("_IgnoreGlobalStretch", 0);
         lastHandDifs.Clear();  
         yield return 0;
     }
