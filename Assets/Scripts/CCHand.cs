@@ -6,10 +6,11 @@ using UnityEngine;
 public class CCHand : MonoBehaviour
 {
     public CCInput grabInput;
-    GameObject grabbedAgent;
+    GrabbableObject grabbedAgent;
     Vector3 lastGrabbedAgentPos;
     Vector3 lastHandPos;
-    List<Vector3> lastHandDifs = new List<Vector3>();
+    public Vector3 lastHandDif;
+    public List<Vector3> lastHandDifs = new List<Vector3>();
     int currentDifIdx = 0;
     Vector3 lastClosestPoint;
     public bool isGrabbing = false;
@@ -31,17 +32,15 @@ public class CCHand : MonoBehaviour
                         lastClosestPoint = closestPoint;
                     }
                 }
-                if (minDist < 0.2f){
-                    grabbedAgent = results[minIdx].gameObject;
-                    grabbedAgent.GetComponent<Animator>().SetTrigger("next");
-                    grabbedAgent.GetComponentInChildren<SkinnedMeshRenderer>().material.SetVector(
-                        "_WarpCenter", 
-                        new Vector4(lastClosestPoint.x, lastClosestPoint.y, lastClosestPoint.z, 25));
-                    // grabbedAgent.GetComponentInChildren<SkinnedMeshRenderer>().material.SetFloat("_IgnoreGlobalStretch", 1);
-                    lastGrabbedAgentPos = grabbedAgent.transform.position;
-                    grabInput.TriggerHaptics();
-                    isGrabbing = true;
-                    // Time.timeScale = 0.3f;
+                if (minDist < 0.2f) {
+                    grabbedAgent = results[minIdx].gameObject.GetComponent<GrabbableObject>();
+                    if(grabbedAgent != null){
+                        grabbedAgent.grabber = this;
+                        grabbedAgent.grabPoint = lastClosestPoint;
+                        lastGrabbedAgentPos = grabbedAgent.transform.position;
+                        grabInput.TriggerHaptics();
+                        isGrabbing = true;
+                    }
                 } else {
                     isGrabbing = false;
                 }
@@ -67,31 +66,19 @@ public class CCHand : MonoBehaviour
                 break;
             }
         }
-
         lastHandPos = transform.localPosition;
     }
 
     void HandleRelease() {
-        grabbedAgent.GetComponent<Animator>().SetTrigger("next");
-        grabbedAgent.GetComponentInChildren<SkinnedMeshRenderer>().material.SetVector("_WarpDir", Vector3.zero);
-        grabbedAgent.GetComponentInChildren<SkinnedMeshRenderer>().material.SetVector(
-        "_WarpCenter", 
-        new Vector4(100, 100, 100, 0));
+        grabbedAgent.grabber = null;
         //push you forward a bit in the last direction 
         StartCoroutine(forwardMomentum());          
     }
 
     void HandleGrabHold() {
-        grabbedAgent.transform.position = lastGrabbedAgentPos;
-
-        Vector3 lastHandDif = transform.parent.TransformDirection(transform.localPosition - lastHandPos);
+        lastHandDif = transform.parent.TransformDirection(transform.localPosition - lastHandPos);
         AddToList(lastHandDif);
-
         CCPlayer.localPlayer.transform.position -= lastHandDif.withY(0);
-        grabbedAgent.GetComponentInChildren<SkinnedMeshRenderer>().material.SetVector("_WarpDir", 15f * lastHandDif);
-
-        // float stretch = Shader.GetGlobalFloat("_GlobalStretch");
-        // Shader.SetGlobalFloat("_GlobalStretch", Mathf.Min(stretch + 0.25f * Time.deltaTime, 3f));
     }
 
     void AddToList(Vector3 el) {
@@ -104,10 +91,10 @@ public class CCHand : MonoBehaviour
     IEnumerator forwardMomentum () {
         float stretch = Shader.GetGlobalFloat("_GlobalStretch");
         Vector3 avgHandDif = getAverageHandDif().withY(0);
-        yield return this.xuTween((float rawT) => {
-            float t = Easing.Cubic.In(rawT);
-            CCPlayer.localPlayer.transform.position -= (1f - t) * avgHandDif;
-        }, 0.15f);
+        while(avgHandDif.sqrMagnitude > 0.001f){
+            avgHandDif = (1f - 3f * Time.deltaTime) * avgHandDif;
+            CCPlayer.localPlayer.transform.position -= avgHandDif;
+        }
         lastHandDifs.Clear();  
         yield return 0;
     }

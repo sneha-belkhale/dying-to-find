@@ -5,7 +5,7 @@ using UnityEngine;
 public enum GrabState {
 Down,
 Holding,
-Released
+Released,
 }
 
 public class CCInput : MonoBehaviour

@@ -116,7 +116,7 @@ Shader "Unlit/PortalOfAnswers"
                 float radius = 0.5 * polar.y;
                 float holeDepth = 150 * _holeDiameter;
                 float distanceToHole = smoothstep(_holeDiameter, _holeDiameter + 0.04, radius);
-                float inTransition = 1 - step(radius, _holeDiameter+ 0.03) * smoothstep(0, 0.1, _holeDiameter);
+                float inTransition = 1 - step(radius, _holeDiameter+ 0.03) * smoothstep(0.05, 0.1, _holeDiameter);
 
                 #if(DISSOLVE)
                     float dissolve = tex2D(_MainTex, 0.7 * polar);

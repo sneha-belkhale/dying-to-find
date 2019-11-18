@@ -16,6 +16,8 @@ public class AgentBrain : MonoBehaviour
   public Transform goal;
   public Transform headPos;
   public Transform sphere;
+  GrabbableObject grab;
+  bool isGrabbed = false;
 
   void Start()
   {
@@ -24,6 +26,7 @@ public class AgentBrain : MonoBehaviour
     m_Agent = GetComponent<NavMeshAgent>();
     m_Agent.destination = goal.position;
     lastHeadRot = headPos.rotation;
+    grab = GetComponent<GrabbableObject>();
   }
 
   public void SetOffset(int offset) {
@@ -97,6 +100,39 @@ public class AgentBrain : MonoBehaviour
       lookAt();
     } else {
       lookBack();
+    }
+
+    if(grab.grabber){
+      handleGrab();
+    }
+  }
+
+  private void handleGrab() {
+    switch (grab.grabber.grabInput.GrabState) {
+      case GrabState.Down : {
+       GetComponent<Animator>().SetTrigger("next");
+        mat.SetVector(
+          "_WarpCenter", 
+          new Vector4(grab.grabPoint.x, grab.grabPoint.y, grab.grabPoint.z, 25));
+        mat.SetFloat("_IgnoreGlobalStretch", 1);
+        isGrabbed = true;
+        break;
+      }
+      case GrabState.Holding : {
+          mat.SetVector("_WarpDir", 15f * grab.grabber.lastHandDif);
+        break;
+      }
+      case GrabState.Released : {
+        if(isGrabbed){
+          GetComponent<Animator>().SetTrigger("next");
+          mat.SetVector("_WarpDir", Vector3.zero);
+          mat.SetVector(
+            "_WarpCenter", 
+            new Vector4(100, 100, 100, 0));
+          isGrabbed = false;
+        }
+        break;
+      }
     }
   }
 

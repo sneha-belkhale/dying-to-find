@@ -184,6 +184,20 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 947559662}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &10443977
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 10443971}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71fe63bf2798c4c9ebce1a5a8339ebec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  grabber: {fileID: 0}
+  grabPoint: {x: 0, y: 0, z: 0}
 --- !u!1001 &152774305
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2083,6 +2097,20 @@ MonoBehaviour:
   portalOfAnswerMat: {fileID: 1154490479}
   envSounds: {fileID: 301728079}
   iceCrack: {fileID: 2137680229}
+--- !u!114 &2033699526
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2033699522}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71fe63bf2798c4c9ebce1a5a8339ebec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  grabber: {fileID: 0}
+  grabPoint: {x: 0, y: 0, z: 0}
 --- !u!1 &2137680228
 GameObject:
   m_ObjectHideFlags: 0
