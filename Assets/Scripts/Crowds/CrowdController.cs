@@ -35,6 +35,7 @@ public class CrowdController : MonoBehaviour
 
   void Start()
   {
+    RenderSettings.fogColor = Color.white;
     for (int i = pMin; i < pMax; i++)
     {
       for (int j = pMin; j < pMax; j++) {

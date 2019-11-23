@@ -36,4 +36,8 @@ public class CCPlayer : MonoBehaviour
       localPlayer = null;
       Shader.SetGlobalFloat("_GlobalStretch", 0);
   }
+
+  public void Teleport(Transform t){
+    transform.SetPositionAndRotation(t.position, t.rotation);
+  }
 }

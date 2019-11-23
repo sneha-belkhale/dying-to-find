@@ -16,7 +16,7 @@ public class CCHand : MonoBehaviour
     public bool isGrabbing = false;
     Collider[] results = new Collider[5];
 
-    public void LateUpdate(){
+    public void Update(){
         switch(grabInput.GrabState){
             case GrabState.Down : {
                 int length = Physics.OverlapSphereNonAlloc(transform.position, 0.4f, results);

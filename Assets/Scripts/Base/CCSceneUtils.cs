@@ -15,7 +15,9 @@ public class CCSceneUtils : MonoBehaviour {
             Destroy(instance);
             instance = this;
         }
-        SceneManager.LoadScene("CrowdScene", LoadSceneMode.Additive);
+        #if !UNITY_EDITOR
+            SceneManager.LoadScene("CrowdScene", LoadSceneMode.Additive);
+        #endif
     }
     private void OnDestroy()
     {

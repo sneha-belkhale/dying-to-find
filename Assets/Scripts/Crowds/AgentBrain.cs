@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class AgentBrain : MonoBehaviour
+public class AgentBrain : GrabbableObject
 {
   [SerializeField]
   private float handCollisionRadius = 0.5f;
@@ -16,17 +16,15 @@ public class AgentBrain : MonoBehaviour
   public Transform goal;
   public Transform headPos;
   public Transform sphere;
-  GrabbableObject grab;
-  bool isGrabbed = false;
 
-  void Start()
+  protected override void Start()
   {
+    base.Start();
     mat = GetComponentInChildren<SkinnedMeshRenderer>().material;
     mat.SetColor("_Color", Random.Range(0f,0.2f)*Color.gray);
     m_Agent = GetComponent<NavMeshAgent>();
     m_Agent.destination = goal.position;
     lastHeadRot = headPos.rotation;
-    grab = GetComponent<GrabbableObject>();
   }
 
   public void SetOffset(int offset) {
@@ -102,53 +100,35 @@ public class AgentBrain : MonoBehaviour
       lookBack();
     }
 
-    if(grab.grabber){
-      handleGrab();
+    if(captured){
+      transform.position = lastAgentPos;
     }
+
+  }
+  bool captured = false;
+  Vector3 lastAgentPos;
+  public override void onDown() {
+      captured = true;
+      GetComponent<Animator>().SetTrigger("next");
+      lastAgentPos = transform.position;
   }
 
-  private void handleGrab() {
-    switch (grab.grabber.grabInput.GrabState) {
-      case GrabState.Down : {
-       GetComponent<Animator>().SetTrigger("next");
-        mat.SetVector(
-          "_WarpCenter", 
-          new Vector4(grab.grabPoint.x, grab.grabPoint.y, grab.grabPoint.z, 25));
-        mat.SetFloat("_IgnoreGlobalStretch", 1);
-        isGrabbed = true;
-        break;
-      }
-      case GrabState.Holding : {
-          mat.SetVector("_WarpDir", 15f * grab.grabber.lastHandDif);
-        break;
-      }
-      case GrabState.Released : {
-        if(isGrabbed){
-          GetComponent<Animator>().SetTrigger("next");
-          mat.SetVector("_WarpDir", Vector3.zero);
-          mat.SetVector(
-            "_WarpCenter", 
-            new Vector4(100, 100, 100, 0));
-          isGrabbed = false;
-        }
-        break;
-      }
-    }
+  public override void onRelease() {
+      Debug.Log("ON Released");
+      GetComponent<Animator>().SetTrigger("next");
+      captured = false;
   }
-
   private void lookAt()
   {
     Quaternion targetQuat = getRotationTowardsClamped(headPos, CCPlayer.localPlayer.head.transform.position, 90f);
     headPos.rotation = Quaternion.Lerp(lastHeadRot, targetQuat, 2f * Time.deltaTime);
     lastHeadRot = headPos.rotation;
   }
-
   private void lookBack()
   {
     headPos.rotation = Quaternion.Lerp(lastHeadRot, headPos.rotation, 3f * Time.deltaTime);
     lastHeadRot = headPos.rotation;
   }
-
   Quaternion getRotationTowardsClamped(Transform current, Vector3 targetPos, float constraint) {
           Vector3 targetDir = (targetPos - current.position).normalized;
 
