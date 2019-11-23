@@ -8,13 +8,14 @@ public class CCSceneUtils : MonoBehaviour {
     public Transform instantiatedObjectRoot;
     private void Awake()
     {
-    if (instance == null) {
-        instance = this;
-    }
-    else {
-        Destroy(instance);
-        instance = this;
-    }
+        if (instance == null) {
+            instance = this;
+        }
+        else {
+            Destroy(instance);
+            instance = this;
+        }
+        SceneManager.LoadScene("CrowdScene", LoadSceneMode.Additive);
     }
     private void OnDestroy()
     {

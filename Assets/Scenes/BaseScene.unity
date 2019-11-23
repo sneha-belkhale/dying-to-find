@@ -238,6 +238,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   grabInput: {fileID: 758119472}
+  lastHandDif: {x: 0, y: 0, z: 0}
+  lastHandDifs: []
   isGrabbing: 0
 --- !u!114 &758119472
 MonoBehaviour:
@@ -272,6 +274,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   grabInput: {fileID: 976782141}
+  lastHandDif: {x: 0, y: 0, z: 0}
+  lastHandDifs: []
   isGrabbing: 0
 --- !u!114 &976782140
 MonoBehaviour:
