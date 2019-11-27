@@ -13,6 +13,7 @@ public class CCInput : MonoBehaviour
 public string hand;
 private OVRInput.Controller ovrHand;
 public GrabState GrabState;
+public Vector2 joystickInput;
     void Start(){
         if(hand == "left"){
             ovrHand = OVRInput.Controller.LTouch;
@@ -26,7 +27,7 @@ public GrabState GrabState;
         StopCoroutine("StopVibration");
         StartCoroutine("StopVibration");
     }
-    
+
     IEnumerator StopVibration() {
        yield return new WaitForSeconds(0.2f);
        OVRInput.SetControllerVibration(0f, 0f, ovrHand);
@@ -53,5 +54,8 @@ public GrabState GrabState;
                 break;
             }
         }
+
+        // handle joystick movement
+        joystickInput = OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick, ovrHand);
     }
 }

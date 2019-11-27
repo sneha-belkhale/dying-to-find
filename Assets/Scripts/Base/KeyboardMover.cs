@@ -21,8 +21,15 @@ public class KeyboardMover : MonoBehaviour
 
     void Update()
     {
+        float boost = 1.0f;
+
+        if (Input.GetKey(KeyCode.B))
+        {
+          boost = 20.0f;
+        }
+
         if (Input.GetKey(KeyCode.R))
-            yaw -= mouseSpeed * Time.deltaTime;       
+            yaw -= mouseSpeed * Time.deltaTime;
         if (Input.GetKey(KeyCode.E))
             yaw += mouseSpeed * Time.deltaTime;
 
@@ -40,11 +47,11 @@ public class KeyboardMover : MonoBehaviour
 
         if (Input.GetKey(KeyCode.A))
             move(-transform.right);
-        
+
         if (Input.GetKey(KeyCode.DownArrow))
-            move(-transform.up);        
+            move(-transform.up * boost);
         if (Input.GetKey(KeyCode.UpArrow))
-            move(transform.up);
+            move(transform.up * boost);
 
     }
 }
