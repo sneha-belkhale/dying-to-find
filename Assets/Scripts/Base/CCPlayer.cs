@@ -10,6 +10,8 @@ public class CCPlayer : MonoBehaviour
   public CCHand rightHand;
   public Transform head;
 
+  public bool antiGravity = false;
+
   public float globalScaleVal = 0;
 
   private void Awake()
@@ -39,5 +41,10 @@ public class CCPlayer : MonoBehaviour
 
   public void Teleport(Transform t){
     transform.SetPositionAndRotation(t.position, t.rotation);
+  }
+  public bool isGrabbing {
+    get {
+      return (leftHand.isGrabbing || rightHand.isGrabbing);
+    }
   }
 }

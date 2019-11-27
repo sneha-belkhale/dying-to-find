@@ -8,54 +8,27 @@ public class GrabbableObject : MonoBehaviour {
   public CCHand grabber; 
   public Vector3 grabPoint;
   public bool isGrabbed;
-  Material matz;
-  protected virtual void Start() {
-    SkinnedMeshRenderer r = GetComponentInChildren<SkinnedMeshRenderer>();
-    if(r != null ){
-      matz = r.material;
-    } else {
-      matz = GetComponentInChildren<Renderer>().material;
-    }
-  }
-  void Update() {
-      handleGrab();
-  }
+  public Material mat;
   public virtual void onDown() {}
   public virtual void onHold() {}
   public virtual void onRelease() {}
 
-  void onDownBase() {
+  public void onDownBase() {
     onDown();
-    matz.SetVector(
+    mat.SetVector(
     "_WarpCenter", 
     new Vector4(grabPoint.x, grabPoint.y, grabPoint.z, 25));
-    matz.SetFloat("_IgnoreGlobalStretch", 1);
+    mat.SetFloat("_IgnoreGlobalStretch", 1);
   }
-  void onHoldBase() {
+  public void onHoldBase() {
     onHold();
-    matz.SetVector("_WarpDir", 15f * grabber.lastHandDif);
+    mat.SetVector("_WarpDir", 15f * grabber.lastHandDif);
   }
-  void onReleaseBase() {
+  public void onReleaseBase() {
     onRelease();
-    matz.SetVector("_WarpDir", Vector3.zero);
-    matz.SetVector(
+    mat.SetVector("_WarpDir", Vector3.zero);
+    mat.SetVector(
     "_WarpCenter", 
     new Vector4(100, 100, 100, 0));
-  }
-
-  private void handleGrab() {
-    if(grabber){
-      if(!isGrabbed) {
-        onDownBase();
-        isGrabbed = true;
-      } else {
-        onHoldBase();
-      }
-    } else {
-      if(isGrabbed){
-        onReleaseBase();
-        isGrabbed = false;
-      }
-    }
   }
 }

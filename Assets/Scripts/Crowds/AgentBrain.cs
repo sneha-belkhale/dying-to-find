@@ -9,17 +9,14 @@ public class AgentBrain : GrabbableObject
   [SerializeField]
   private float handCollisionRadius = 0.5f;
   private NavMeshAgent m_Agent;
-  private Material mat;
   private Quaternion lastHeadRot;
   private bool transitioning;
-
   public Transform goal;
   public Transform headPos;
   public Transform sphere;
 
-  protected override void Start()
+  void Start()
   {
-    base.Start();
     mat = GetComponentInChildren<SkinnedMeshRenderer>().material;
     mat.SetColor("_Color", Random.Range(0f,0.2f)*Color.gray);
     m_Agent = GetComponent<NavMeshAgent>();

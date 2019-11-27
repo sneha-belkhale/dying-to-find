@@ -39,6 +39,7 @@ public class CCHand : MonoBehaviour
                         grabbedAgent.grabPoint = lastClosestPoint;
                         lastGrabbedAgentPos = grabbedAgent.transform.position;
                         grabInput.TriggerHaptics();
+                        grabbedAgent.onDownBase();
                         isGrabbing = true;
                     }
                 } else {
@@ -49,7 +50,7 @@ public class CCHand : MonoBehaviour
             case GrabState.Holding: {
                 if(isGrabbing){
                     // check if player somehow got too far 
-                    if(Vector3.Distance(CCPlayer.localPlayer.transform.position, grabbedAgent.transform.position) > 4f){
+                    if(Vector3.Distance(CCPlayer.localPlayer.transform.position, grabbedAgent.grabPoint) > 4f){
                         isGrabbing = false;
                         HandleRelease();
                     } else {
@@ -70,6 +71,7 @@ public class CCHand : MonoBehaviour
     }
 
     void HandleRelease() {
+        grabbedAgent.onReleaseBase();
         grabbedAgent.grabber = null;
         //push you forward a bit in the last direction 
         StartCoroutine(forwardMomentum());          
@@ -78,7 +80,11 @@ public class CCHand : MonoBehaviour
     void HandleGrabHold() {
         lastHandDif = transform.parent.TransformDirection(transform.localPosition - lastHandPos);
         AddToList(lastHandDif);
-        CCPlayer.localPlayer.transform.position -= lastHandDif.withY(0);
+        CCPlayer.localPlayer.transform.position = 
+        CCPlayer.localPlayer.antiGravity ? 
+            CCPlayer.localPlayer.transform.position - lastHandDif: 
+            CCPlayer.localPlayer.transform.position - lastHandDif.withY(0);
+        grabbedAgent.onHoldBase();
     }
 
     void AddToList(Vector3 el) {
@@ -90,10 +96,12 @@ public class CCHand : MonoBehaviour
 
     IEnumerator forwardMomentum () {
         float stretch = Shader.GetGlobalFloat("_GlobalStretch");
-        Vector3 avgHandDif = getAverageHandDif().withY(0);
+        Vector3 avgHandDif = getAverageHandDif();
+        avgHandDif = CCPlayer.localPlayer.antiGravity ? avgHandDif : avgHandDif.withY(0);
         while(avgHandDif.sqrMagnitude > 0.001f){
-            avgHandDif = (1f - 3f * Time.deltaTime) * avgHandDif;
+            avgHandDif = (1f - 1.5f * Time.deltaTime) * avgHandDif;
             CCPlayer.localPlayer.transform.position -= avgHandDif;
+            yield return 0;
         }
         lastHandDifs.Clear();  
         yield return 0;
