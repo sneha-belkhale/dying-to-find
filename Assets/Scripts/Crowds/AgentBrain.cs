@@ -13,7 +13,6 @@ public class AgentBrain : GrabbableObject
   private bool transitioning;
   public Transform goal;
   public Transform headPos;
-  public Transform sphere;
 
   void Start()
   {

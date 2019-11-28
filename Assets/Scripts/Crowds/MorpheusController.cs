@@ -18,6 +18,8 @@ public class MorpheusController : MonoBehaviour
       StartCoroutine(Glitch());
 
       envAudios = envSounds.GetComponents<AudioSource>();
+      RenderSettings.fogColor = Color.white;
+      RenderSettings.fogDensity = 0.003f;
     }
 
     IEnumerator Glitch()
@@ -94,8 +96,8 @@ public class MorpheusController : MonoBehaviour
         Shader.SetGlobalFloat("_GlobalStretch", stretch + 1f * t + 1f);
         holeDiam += 2f * Time.deltaTime/(10f + 1000 * t);
         portalOfAnswerMat.material.SetFloat("_holeDiameter", holeDiam);
-
-      }, 30f);
+        RenderSettings.fogDensity = 0.003f + 0.1f * t;
+      }, 7f);
       portalOfAnswerMat.gameObject.SetActive(false);
       CCSceneUtils.instance.StartCoroutine(CCSceneUtils.DoFadeSceneLoadCoroutine("UnderWorldScene","CrowdScene"));
 

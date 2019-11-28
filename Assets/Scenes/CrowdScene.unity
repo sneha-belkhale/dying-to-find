@@ -138,9 +138,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2e6c1ea515834a5aae3980549a480a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  grabber: {fileID: 0}
+  grabber:
+  - {fileID: 0}
+  - {fileID: 0}
   grabPoint: {x: 0, y: 0, z: 0}
-  isGrabbed: 0
+  mat: {fileID: 0}
   handCollisionRadius: 0.5
   goal: {fileID: 605382741}
   headPos: {fileID: 2004514910}
@@ -2098,9 +2100,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71fe63bf2798c4c9ebce1a5a8339ebec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  grabber: {fileID: 0}
+  grabber:
+  - {fileID: 0}
   grabPoint: {x: 0, y: 0, z: 0}
-  isGrabbed: 0
+  mat: {fileID: 0}
 --- !u!1 &2137680228
 GameObject:
   m_ObjectHideFlags: 0

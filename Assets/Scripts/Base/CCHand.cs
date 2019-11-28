@@ -100,14 +100,15 @@ public class CCHand : MonoBehaviour
         }
     }
 
+    public Vector3 forwardMomentumVec = Vector3.zero;
     IEnumerator forwardMomentum () {
-        Vector3 avgHandDif = getAverageHandDif();
-        avgHandDif = CCPlayer.localPlayer.antiGravity ? avgHandDif : avgHandDif.withY(0);
-        while(avgHandDif.sqrMagnitude > 0.001f){
-            avgHandDif = (1f - 1.5f * Time.deltaTime) * avgHandDif;
-            CCPlayer.localPlayer.transform.position -= avgHandDif;
+        forwardMomentumVec = getAverageHandDif();
+        forwardMomentumVec = CCPlayer.localPlayer.antiGravity ? forwardMomentumVec : forwardMomentumVec.withY(0);
+        while(forwardMomentumVec.sqrMagnitude > 0.001f){
+            forwardMomentumVec = (1f - 1.5f * Time.deltaTime) * forwardMomentumVec;
             yield return 0;
         }
+        forwardMomentumVec = Vector3.zero;
         lastHandDifs.Clear();  
         yield return 0;
     }

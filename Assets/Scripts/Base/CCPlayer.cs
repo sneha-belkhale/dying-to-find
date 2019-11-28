@@ -13,7 +13,9 @@ public class CCPlayer : MonoBehaviour
   public bool antiGravity = false;
 
   public float globalScaleVal = 0;
-
+  Vector3 pAcc;
+  Vector3 pVelo;
+  bool falling = false;
   private void Awake()
   {
     if (localPlayer == null) {
@@ -24,18 +26,43 @@ public class CCPlayer : MonoBehaviour
         localPlayer = this;
     }
     transform.position = transform.position.withY(1.8f);
+    ResetAcceleration();
   }
-
+  void ResetAcceleration() {
+      if (antiGravity) {
+        pVelo = Vector3.down - 80f * (leftHand.forwardMomentumVec + rightHand.forwardMomentumVec);
+        pAcc = Vector3.up * -9.8f;
+      } else {
+        pVelo = -50f * (leftHand.forwardMomentumVec + rightHand.forwardMomentumVec);
+        pAcc = Vector3.zero;
+      }
+  }
   private void Update()
   {
-#if UNITY_EDITOR
-        // Shader.SetGlobalFloat("_GlobalStretch", globalScaleVal);
-#endif
     //debugging 
     Vector3 curPos = transform.position;
     curPos.y += leftHand.grabInput.joystickInput.y;
     curPos.y += rightHand.grabInput.joystickInput.y;
     transform.position = curPos;
+
+    Vector3 pos = CCPlayer.localPlayer.transform.position;
+
+    // Movement
+    if(isGrabbing){
+      falling = false;
+    } else {
+        if(!falling) {
+            // reset velocity
+            ResetAcceleration();
+            falling = true;
+        }
+        pVelo.y = Mathf.Max(pVelo.y + pAcc.y * Time.deltaTime, -4.5f);
+        Vector3 damp = ((1f - 1.5f * Time.deltaTime) * Vector3.one).withY(1f);
+        pVelo = Vector3.Scale(pVelo, damp);
+        pos += Time.deltaTime * pVelo;
+    }
+
+    CCPlayer.localPlayer.transform.position = pos;
   }
 
   private void OnDestroy()

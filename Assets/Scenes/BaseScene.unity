@@ -15,9 +15,9 @@ RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 9
   m_Fog: 1
-  m_FogColor: {r: 0, g: 0, b: 0, a: 1}
+  m_FogColor: {r: 1, g: 1, b: 1, a: 1}
   m_FogMode: 3
-  m_FogDensity: 0.15
+  m_FogDensity: 0.003
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
   m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
@@ -242,6 +242,7 @@ MonoBehaviour:
   lastHandDifs: []
   isGrabbing: 0
   hand: 0
+  forwardMomentumVec: {x: 0, y: 0, z: 0}
 --- !u!114 &758119472
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -280,6 +281,7 @@ MonoBehaviour:
   lastHandDifs: []
   isGrabbing: 0
   hand: 1
+  forwardMomentumVec: {x: 0, y: 0, z: 0}
 --- !u!114 &976782141
 MonoBehaviour:
   m_ObjectHideFlags: 0
