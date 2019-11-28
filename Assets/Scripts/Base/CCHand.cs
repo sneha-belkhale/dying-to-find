@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //Static Class to hand grab state
+public enum Hand {
+    Left,
+    Right
+}
 public class CCHand : MonoBehaviour
 {
     public CCInput grabInput;
@@ -15,6 +19,7 @@ public class CCHand : MonoBehaviour
     Vector3 lastClosestPoint;
     public bool isGrabbing = false;
     Collider[] results = new Collider[5];
+    public Hand hand;
 
     public void Update(){
         switch(grabInput.GrabState){
@@ -35,7 +40,7 @@ public class CCHand : MonoBehaviour
                 if (minDist < 0.2f) {
                     grabbedAgent = results[minIdx].gameObject.GetComponent<GrabbableObject>();
                     if(grabbedAgent != null){
-                        grabbedAgent.grabber = this;
+                        grabbedAgent.grabber[(int)hand] = this;
                         grabbedAgent.grabPoint = lastClosestPoint;
                         lastGrabbedAgentPos = grabbedAgent.transform.position;
                         grabInput.TriggerHaptics();
@@ -50,12 +55,13 @@ public class CCHand : MonoBehaviour
             case GrabState.Holding: {
                 if(isGrabbing){
                     // check if player somehow got too far 
-                    if(Vector3.Distance(CCPlayer.localPlayer.transform.position, grabbedAgent.grabPoint) > 4f){
-                        isGrabbing = false;
-                        HandleRelease();
-                    } else {
-                        HandleGrabHold();
-                    }
+                    // if(Vector3.Distance(CCPlayer.localPlayer.transform.position, grabbedAgent.grabPoint) > 4f){
+                    //     isGrabbing = false;
+                    //     HandleRelease();
+                    // } else {
+                    //     HandleGrabHold();
+                    // }
+                    HandleGrabHold();
                 }
                 break;
             }
@@ -72,7 +78,7 @@ public class CCHand : MonoBehaviour
 
     void HandleRelease() {
         grabbedAgent.onReleaseBase();
-        grabbedAgent.grabber = null;
+        grabbedAgent.grabber[(int)hand] = null;
         //push you forward a bit in the last direction 
         StartCoroutine(forwardMomentum());          
     }
@@ -95,7 +101,6 @@ public class CCHand : MonoBehaviour
     }
 
     IEnumerator forwardMomentum () {
-        float stretch = Shader.GetGlobalFloat("_GlobalStretch");
         Vector3 avgHandDif = getAverageHandDif();
         avgHandDif = CCPlayer.localPlayer.antiGravity ? avgHandDif : avgHandDif.withY(0);
         while(avgHandDif.sqrMagnitude > 0.001f){

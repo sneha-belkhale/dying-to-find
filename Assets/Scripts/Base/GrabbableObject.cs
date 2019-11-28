@@ -5,9 +5,8 @@ using UnityEngine;
 using UnityEngine.AI;
 
 public class GrabbableObject : MonoBehaviour {
-  public CCHand grabber; 
+  public CCHand[] grabber = new CCHand[2]; 
   public Vector3 grabPoint;
-  public bool isGrabbed;
   public Material mat;
   public virtual void onDown() {}
   public virtual void onHold() {}
@@ -20,9 +19,20 @@ public class GrabbableObject : MonoBehaviour {
     new Vector4(grabPoint.x, grabPoint.y, grabPoint.z, 25));
     mat.SetFloat("_IgnoreGlobalStretch", 1);
   }
+
+  Vector3 getGrabCenter() {
+    Vector3 grabCenter = Vector3.zero;
+    float count = 0;
+    for(int i = 0 ; i < 2; i ++){
+      if(!grabber[i]) continue;
+      grabCenter += grabber[i].lastHandDif;
+      count += 1f;
+    }
+    return grabCenter/count;
+  }
   public void onHoldBase() {
     onHold();
-    mat.SetVector("_WarpDir", 15f * grabber.lastHandDif);
+    mat.SetVector("_WarpDir", 15f * getGrabCenter());
   }
   public void onReleaseBase() {
     onRelease();

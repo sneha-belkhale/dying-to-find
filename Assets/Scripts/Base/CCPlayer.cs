@@ -31,6 +31,7 @@ public class CCPlayer : MonoBehaviour
 #if UNITY_EDITOR
         // Shader.SetGlobalFloat("_GlobalStretch", globalScaleVal);
 #endif
+    //debugging 
     Vector3 curPos = transform.position;
     curPos.y += leftHand.grabInput.joystickInput.y;
     curPos.y += rightHand.grabInput.joystickInput.y;
