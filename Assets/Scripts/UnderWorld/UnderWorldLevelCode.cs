@@ -9,9 +9,10 @@ public class UnderWorldLevelCode : MonoBehaviour
     {
         CCPlayer.localPlayer.Teleport(startingSpawn);
         CCPlayer.localPlayer.antiGravity = true;
+        CCPlayer.localPlayer.ResetAcceleration();
 
         RenderSettings.fogColor = Color.black;
-        RenderSettings.fogDensity = 0.015f;
+        RenderSettings.fogDensity = 0.15f;
 
     }
 

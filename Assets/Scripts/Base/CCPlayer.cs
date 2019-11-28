@@ -28,7 +28,7 @@ public class CCPlayer : MonoBehaviour
     transform.position = transform.position.withY(1.8f);
     ResetAcceleration();
   }
-  void ResetAcceleration() {
+  public void ResetAcceleration() {
       if (antiGravity) {
         pVelo = Vector3.down - 80f * (leftHand.forwardMomentumVec + rightHand.forwardMomentumVec);
         pAcc = Vector3.up * -9.8f;
@@ -56,7 +56,7 @@ public class CCPlayer : MonoBehaviour
             ResetAcceleration();
             falling = true;
         }
-        pVelo.y = Mathf.Max(pVelo.y + pAcc.y * Time.deltaTime, -4.5f);
+        pVelo.y = Mathf.Max(pVelo.y + pAcc.y * Time.deltaTime, -6f);
         Vector3 damp = ((1f - 1.5f * Time.deltaTime) * Vector3.one).withY(1f);
         pVelo = Vector3.Scale(pVelo, damp);
         pos += Time.deltaTime * pVelo;
