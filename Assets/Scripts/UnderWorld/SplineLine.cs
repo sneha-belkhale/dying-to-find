@@ -23,7 +23,8 @@ public class SplineLine : MonoBehaviour
                 splineTargets[i] = transform.position;
                 continue;
             }
-            float noise = Mathf.PerlinNoise(3f * (float)i / splineCount, transform.position.y);
+            float noise = Mathf.PerlinNoise(3f * (float)i / splineCount, 3f * transform.position.y);
+            // float noise = 1f;
             splineTargets[i] = scale * (i - cutOff) * transform.forward + 0.5f * noise * (i - cutOff) * transform.up + transform.position;
             if (i > 0)
             {
@@ -41,7 +42,7 @@ public class SplineLine : MonoBehaviour
             bc.size = new Vector3(0.5f, 0.5f, 2f * dif.magnitude);
             bc.transform.rotation = Quaternion.LookRotation(dif.normalized);
             GrabbableObject grab = go.AddComponent<GrabbableObject>();
-            grab.mat = line.material;
+            grab.mat = line.sharedMaterial;
         // Instantiate(viz, splineTargets[i], Quaternion.identity);
         }
 
