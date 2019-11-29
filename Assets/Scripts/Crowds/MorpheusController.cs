@@ -53,7 +53,7 @@ public class MorpheusController : MonoBehaviour
     bool transitionComplete = false;
     void Update()
     {
-      if(Vector3.Distance(CCPlayer.localPlayer.transform.position, transform.position) < 2f && !transitionComplete) { 
+      if(Vector3.Distance(CCPlayer.main.transform.position, transform.position) < 2f && !transitionComplete) {
         //start fade out coroutine
         StartCoroutine(MorpheusTransition());
         transitionComplete = true;
@@ -83,15 +83,15 @@ public class MorpheusController : MonoBehaviour
 
       bool setFog = false;
       float holeDiam = 0.314f;
-      
+
       yield return this.xuTween((float t) => {
         if(t > 0.04 && !setFog){
           RenderSettings.fogColor = Color.black;
           setFog = true;
         }
-        Vector3 pos = CCPlayer.localPlayer.transform.position;
+        Vector3 pos = CCPlayer.main.transform.position;
         pos.y -= (4f + 3f * t) * 2f * Time.deltaTime;
-        CCPlayer.localPlayer.transform.position = pos;
+        CCPlayer.main.transform.position = pos;
 
         Shader.SetGlobalFloat("_GlobalStretch", stretch + 1f * t + 1f);
         holeDiam += 2f * Time.deltaTime/(10f + 1000 * t);

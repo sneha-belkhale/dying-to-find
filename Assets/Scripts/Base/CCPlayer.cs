@@ -5,7 +5,7 @@ using UnityEngine;
 //Static Class to hand grab state
 public class CCPlayer : MonoBehaviour
 {
-  public static CCPlayer localPlayer;
+  public static CCPlayer main;
   public CCHand leftHand;
   public CCHand rightHand;
   public Transform head;
@@ -18,12 +18,12 @@ public class CCPlayer : MonoBehaviour
   bool falling = false;
   private void Awake()
   {
-    if (localPlayer == null) {
-        localPlayer = this;
+    if (main == null) {
+        main = this;
     }
     else {
-        Destroy(localPlayer);
-        localPlayer = this;
+        Destroy(main);
+        main = this;
     }
     transform.position = transform.position.withY(1.8f);
     ResetAcceleration();
@@ -39,13 +39,13 @@ public class CCPlayer : MonoBehaviour
   }
   private void Update()
   {
-    //debugging 
+    //debugging
     Vector3 curPos = transform.position;
     curPos.y += leftHand.grabInput.joystickInput.y;
     curPos.y += rightHand.grabInput.joystickInput.y;
     transform.position = curPos;
 
-    Vector3 pos = CCPlayer.localPlayer.transform.position;
+    Vector3 pos = CCPlayer.main.transform.position;
 
     // Movement
     if(isGrabbing){
@@ -62,12 +62,12 @@ public class CCPlayer : MonoBehaviour
         pos += Time.deltaTime * pVelo;
     }
 
-    CCPlayer.localPlayer.transform.position = pos;
+    CCPlayer.main.transform.position = pos;
   }
 
   private void OnDestroy()
   {
-      localPlayer = null;
+      main = null;
       Shader.SetGlobalFloat("_GlobalStretch", 0);
   }
 
