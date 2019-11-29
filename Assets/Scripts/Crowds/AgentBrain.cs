@@ -80,7 +80,7 @@ public class AgentBrain : GrabbableObject
     // GetComponentInChildren<SkinnedMeshRenderer>().material.SetVector("_WarpDir", dir);
 
     // GetComponentInChildren<SkinnedMeshRenderer>().material.SetVector(
-    //                     "_WarpCenter", 
+    //                     "_WarpCenter",
     //                     new Vector4(closestPoint.x, closestPoint.y, closestPoint.z, 50));
     if (Vector3.Distance(transform.position, goal.position) < 8 && !transitioning)
     {
@@ -88,8 +88,8 @@ public class AgentBrain : GrabbableObject
       transitioning = true;
     }
 
-    if((CCPlayer.localPlayer.rightHand.transform.position - headPos.position).magnitude < handCollisionRadius ||
-       (CCPlayer.localPlayer.leftHand.transform.position - headPos.position).magnitude < handCollisionRadius)
+    if((CCPlayer.main.rightHand.transform.position - headPos.position).magnitude < handCollisionRadius ||
+       (CCPlayer.main.leftHand.transform.position - headPos.position).magnitude < handCollisionRadius)
     {
       lookAt();
     } else {
@@ -116,7 +116,7 @@ public class AgentBrain : GrabbableObject
   }
   private void lookAt()
   {
-    Quaternion targetQuat = getRotationTowardsClamped(headPos, CCPlayer.localPlayer.head.transform.position, 90f);
+    Quaternion targetQuat = getRotationTowardsClamped(headPos, CCPlayer.main.head.transform.position, 90f);
     headPos.rotation = Quaternion.Lerp(lastHeadRot, targetQuat, 2f * Time.deltaTime);
     lastHeadRot = headPos.rotation;
   }

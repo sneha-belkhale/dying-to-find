@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 //5
-public class CatmullRom3 : MonoBehaviour
+public class CatmullRom3
 {
     Vector3[] _points;
     Vector3 p0, p1, t0, t1, c0, c1, c2, c3;

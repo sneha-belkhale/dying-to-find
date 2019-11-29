@@ -25,7 +25,7 @@ public class CCHand : MonoBehaviour
         switch(grabInput.GrabState){
             case GrabState.Down : {
                 int length = Physics.OverlapSphereNonAlloc(transform.position, 0.4f, results);
-                //get the closest one 
+                //get the closest one
                 float minDist = 1f;
                 int minIdx = 0;
                 for (int i = 0 ; i < length; i++){
@@ -54,7 +54,7 @@ public class CCHand : MonoBehaviour
             }
             case GrabState.Holding: {
                 if(isGrabbing){
-                    // check if player somehow got too far 
+                    // check if player somehow got too far
                     // if(Vector3.Distance(CCPlayer.localPlayer.transform.position, grabbedAgent.grabPoint) > 4f){
                     //     isGrabbing = false;
                     //     HandleRelease();
@@ -79,17 +79,17 @@ public class CCHand : MonoBehaviour
     void HandleRelease() {
         grabbedAgent.onReleaseBase();
         grabbedAgent.grabber[(int)hand] = null;
-        //push you forward a bit in the last direction 
-        StartCoroutine(forwardMomentum());          
+        //push you forward a bit in the last direction
+        StartCoroutine(forwardMomentum());
     }
 
     void HandleGrabHold() {
         lastHandDif = transform.parent.TransformDirection(transform.localPosition - lastHandPos);
         AddToList(lastHandDif);
-        CCPlayer.localPlayer.transform.position = 
-        CCPlayer.localPlayer.antiGravity ? 
-            CCPlayer.localPlayer.transform.position - lastHandDif: 
-            CCPlayer.localPlayer.transform.position - lastHandDif.withY(0);
+        CCPlayer.main.transform.position =
+        CCPlayer.main.antiGravity ?
+            CCPlayer.main.transform.position - lastHandDif:
+            CCPlayer.main.transform.position - lastHandDif.withY(0);
         grabbedAgent.onHoldBase();
     }
 
@@ -103,13 +103,13 @@ public class CCHand : MonoBehaviour
     public Vector3 forwardMomentumVec = Vector3.zero;
     IEnumerator forwardMomentum () {
         forwardMomentumVec = getAverageHandDif();
-        forwardMomentumVec = CCPlayer.localPlayer.antiGravity ? forwardMomentumVec : forwardMomentumVec.withY(0);
+        forwardMomentumVec = CCPlayer.main.antiGravity ? forwardMomentumVec : forwardMomentumVec.withY(0);
         while(forwardMomentumVec.sqrMagnitude > 0.001f){
             forwardMomentumVec = (1f - 1.5f * Time.deltaTime) * forwardMomentumVec;
             yield return 0;
         }
         forwardMomentumVec = Vector3.zero;
-        lastHandDifs.Clear();  
+        lastHandDifs.Clear();
         yield return 0;
     }
 
