@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AudioController : MonoBehaviour
+public class SoundArea : MonoBehaviour
 {
     [SerializeField]
     private float m_FadeInDuration = 10.0f;
@@ -38,7 +38,7 @@ public class AudioController : MonoBehaviour
         m_Audio.Stop();
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter()
     {
         if (m_FadeOutCoroutine != null)
         {
@@ -47,7 +47,7 @@ public class AudioController : MonoBehaviour
         m_FadeInCoroutine = StartCoroutine(this.FadeIn());
     }
 
-    private void OnTriggerExit(Collider other)
+    private void OnTriggerExit()
     {
         if (m_FadeInCoroutine != null)
         {
@@ -59,11 +59,5 @@ public class AudioController : MonoBehaviour
     void Start()
     {
         m_Audio = gameObject.GetComponent<AudioSource>();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        // Debug.Log("Player: " + CCPlayer.main.transform.position.y);
     }
 }

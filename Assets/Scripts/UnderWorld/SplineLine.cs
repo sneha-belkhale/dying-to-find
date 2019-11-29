@@ -10,13 +10,11 @@ public class SplineLine : MonoBehaviour
     public Vector3 endPos;
     public Vector3 Init()
     {
-
         int splineCount = 100;
         Vector3[] splineTargets = new Vector3[splineCount];
         float distance = 0;
         float scale = 1;
         int cutOff = 52;
-        // splineTargets[] = transform.position;
         for (int i = 0; i < splineCount; i++)
         {
             if((i-cutOff) == 0) {
@@ -24,7 +22,6 @@ public class SplineLine : MonoBehaviour
                 continue;
             }
             float noise = Mathf.PerlinNoise(3f * (float)i / splineCount, 3f * transform.position.y);
-            // float noise = 1f;
             splineTargets[i] = scale * (i - cutOff) * transform.forward + 0.5f * noise * (i - cutOff) * transform.up + transform.position;
             if (i > 0)
             {
@@ -43,7 +40,6 @@ public class SplineLine : MonoBehaviour
             bc.transform.rotation = Quaternion.LookRotation(dif.normalized);
             GrabbableObject grab = go.AddComponent<GrabbableObject>();
             grab.mat = line.sharedMaterial;
-        // Instantiate(viz, splineTargets[i], Quaternion.identity);
         }
 
         CatmullRom3 curve = new CatmullRom3();

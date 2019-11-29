@@ -56,7 +56,7 @@ public class CCPlayer : MonoBehaviour
             ResetAcceleration();
             falling = true;
         }
-        pVelo.y = Mathf.Max(pVelo.y + pAcc.y * Time.deltaTime, -6f);
+        pVelo.y = Mathf.Max(pVelo.y + pAcc.y * Time.deltaTime, -7.2f);
         Vector3 damp = ((1f - 1.5f * Time.deltaTime) * Vector3.one).withY(1f);
         pVelo = Vector3.Scale(pVelo, damp);
         pos += Time.deltaTime * pVelo;
