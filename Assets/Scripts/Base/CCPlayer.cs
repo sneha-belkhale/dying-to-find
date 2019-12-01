@@ -45,7 +45,7 @@ public class CCPlayer : MonoBehaviour
     curPos.y += rightHand.grabInput.joystickInput.y;
     transform.position = curPos;
 
-    Vector3 pos = CCPlayer.main.transform.position;
+    Vector3 pos = transform.position;
 
     // Movement
     if(isGrabbing){
@@ -56,13 +56,25 @@ public class CCPlayer : MonoBehaviour
             ResetAcceleration();
             falling = true;
         }
+        float armSpan = GetArmSpan();
+        pVelo += GetArmSpanForce();
         pVelo.y = Mathf.Max(pVelo.y + pAcc.y * Time.deltaTime, -7.2f);
-        Vector3 damp = ((1f - 1.5f * Time.deltaTime) * Vector3.one).withY(1f);
+        Vector3 damp = ((1f - 1.5f * Time.deltaTime) * Vector3.one).withY(armSpan);
         pVelo = Vector3.Scale(pVelo, damp);
         pos += Time.deltaTime * pVelo;
     }
 
     CCPlayer.main.transform.position = pos;
+  }
+
+  float GetArmSpan(){
+    float mag = Vector3.Magnitude(leftHand.transform.position.withY(0) - rightHand.transform.position.withY(0));
+    return Mathf.Clamp(1f - 4f * Time.deltaTime * mag, 0f , 1f);
+  }
+
+  Vector3 GetArmSpanForce(){
+    Vector3 headToHandDir = head.position - 0.5f * (leftHand.transform.position + rightHand.transform.position);
+    return 0.08f * headToHandDir.withY(0);
   }
 
   private void OnDestroy()
