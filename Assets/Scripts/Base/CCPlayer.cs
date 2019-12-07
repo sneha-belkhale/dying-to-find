@@ -16,6 +16,7 @@ public class CCPlayer : MonoBehaviour
   Vector3 pAcc;
   Vector3 pVelo;
   bool falling = false;
+  CharacterController characterController;
   private void Awake()
   {
     if (main == null) {
@@ -26,6 +27,7 @@ public class CCPlayer : MonoBehaviour
         main = this;
     }
     transform.position = transform.position.withY(1.8f);
+    characterController = GetComponent<CharacterController>();
     ResetAcceleration();
   }
   public void ResetAcceleration() {
@@ -45,7 +47,7 @@ public class CCPlayer : MonoBehaviour
     curPos.y += rightHand.grabInput.joystickInput.y;
     transform.position = curPos;
 
-    Vector3 pos = transform.position;
+    Vector3 finalMove = Vector3.zero;
 
     // Movement
     if(isGrabbing){
@@ -54,8 +56,8 @@ public class CCPlayer : MonoBehaviour
       pVelo += 0.5f * handDif(rightHand);
       Vector3 damp = ((1f - Time.deltaTime) * Vector3.one);
       pVelo = Vector3.Scale(pVelo, damp);
-      pos += Time.deltaTime * pVelo;
-    } else {
+      finalMove += Time.deltaTime * pVelo;
+    } else if(!characterController.isGrounded){
         if(!falling) {
             // reset velocity
             ResetAcceleration();
@@ -66,10 +68,10 @@ public class CCPlayer : MonoBehaviour
         pVelo.y = Mathf.Max(pVelo.y + pAcc.y * Time.deltaTime, -7.2f);
         Vector3 damp = ((1f - 1.5f * Time.deltaTime) * Vector3.one).withY(armSpan);
         pVelo = Vector3.Scale(pVelo, damp);
-        pos += Time.deltaTime * pVelo;
+        finalMove += Time.deltaTime * pVelo;
     }
 
-    CCPlayer.main.transform.position = pos;
+    characterController.Move(finalMove);
   }
 
   float GetArmSpan(){

@@ -226,8 +226,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   grabInput: {fileID: 758119472}
+  grabbedAgent: {fileID: 0}
   lastHandDif: {x: 0, y: 0, z: 0}
   lastHandDifs: []
+  lastClosestPoint: {x: 0, y: 0, z: 0}
   isGrabbing: 0
   hand: 0
   forwardMomentumVec: {x: 0, y: 0, z: 0}
@@ -265,8 +267,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   grabInput: {fileID: 976782141}
+  grabbedAgent: {fileID: 0}
   lastHandDif: {x: 0, y: 0, z: 0}
   lastHandDifs: []
+  lastClosestPoint: {x: 0, y: 0, z: 0}
   isGrabbing: 0
   hand: 1
   forwardMomentumVec: {x: 0, y: 0, z: 0}
@@ -614,7 +618,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 14300000, guid: ce816f2e6abb0504092c23ed9b970dfd, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 11400010, guid: ce816f2e6abb0504092c23ed9b970dfd, type: 3}
       propertyPath: m_Enabled
