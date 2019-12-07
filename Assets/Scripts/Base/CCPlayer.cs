@@ -50,6 +50,11 @@ public class CCPlayer : MonoBehaviour
     // Movement
     if(isGrabbing){
       falling = false;
+      pVelo += 0.5f * handDif(leftHand);
+      pVelo += 0.5f * handDif(rightHand);
+      Vector3 damp = ((1f - Time.deltaTime) * Vector3.one);
+      pVelo = Vector3.Scale(pVelo, damp);
+      pos += Time.deltaTime * pVelo;
     } else {
         if(!falling) {
             // reset velocity
@@ -90,5 +95,13 @@ public class CCPlayer : MonoBehaviour
     get {
       return (leftHand.isGrabbing || rightHand.isGrabbing);
     }
+  }
+
+  Vector3 handDif(CCHand hand) {
+    Vector3 grabPointDif = Vector3.zero;
+    if(hand.isGrabbing){
+      grabPointDif = hand.lastClosestPoint - hand.transform.position;
+    }
+    return grabPointDif;
   }
 }

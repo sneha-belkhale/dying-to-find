@@ -9,7 +9,7 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: Lines
   m_Shader: {fileID: 4800000, guid: 762cfb24fae0a4c118a739037fb0f9d2, type: 3}
-  m_ShaderKeywords: 
+  m_ShaderKeywords: USE_EFFECTS _USEPOINTCOLOR_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -78,11 +78,11 @@ Material:
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _UVSec: 0
-    - _UsePointColor: 0
+    - _UsePointColor: 1
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 1, g: 0.8820755, b: 0.8820755, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _VertOutVal: {r: 0, g: 0, b: 0, a: 1}
-    - _WarpCenter: {r: 0, g: 0, b: 0, a: 0}
-    - _WarpDir: {r: 0, g: 0, b: 0, a: 0}
+    - _WarpCenter: {r: 94.63, g: 1.2712362, b: 6.7, a: 0.2}
+    - _WarpDir: {r: 0, g: 0.03876376, b: 0, a: 0}

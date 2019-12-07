@@ -10,13 +10,13 @@ public enum Hand {
 public class CCHand : MonoBehaviour
 {
     public CCInput grabInput;
-    GrabbableObject grabbedAgent;
+    public GrabbableObject grabbedAgent;
     Vector3 lastGrabbedAgentPos;
     Vector3 lastHandPos;
     public Vector3 lastHandDif;
     public List<Vector3> lastHandDifs = new List<Vector3>();
     int currentDifIdx = 0;
-    Vector3 lastClosestPoint;
+    public Vector3 lastClosestPoint;
     public bool isGrabbing = false;
     Collider[] results = new Collider[5];
     public Hand hand;

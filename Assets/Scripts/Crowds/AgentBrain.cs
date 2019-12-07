@@ -21,6 +21,7 @@ public class AgentBrain : GrabbableObject
     m_Agent = GetComponent<NavMeshAgent>();
     m_Agent.destination = goal.position;
     lastHeadRot = headPos.rotation;
+    falloutRadius = 25f;
   }
 
   public void SetOffset(int offset) {
