@@ -9,6 +9,7 @@ public class CrowdSceneManager : MonoBehaviour
     {
         RenderSettings.fog = true;
         RenderSettings.fogColor = Color.white;
+        RenderSettings.fogDensity = 0.003f;
     }
 
     // Update is called once per frame
