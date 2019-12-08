@@ -7,6 +7,7 @@ public class BoxGizmo : MonoBehaviour
 {
     public string label = "";
 
+#if UnityEditor
     void OnDrawGizmos()
     {
         GUIStyle style = new GUIStyle();
@@ -17,4 +18,5 @@ public class BoxGizmo : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawWireCube(transform.position, new Vector3(1, 1, 1));
     }
+#endif
 }

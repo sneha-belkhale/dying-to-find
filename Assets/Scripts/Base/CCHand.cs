@@ -24,7 +24,7 @@ public class CCHand : MonoBehaviour
     public void Update(){
         switch(grabInput.GrabState){
             case GrabState.Down : {
-                int length = Physics.OverlapSphereNonAlloc(transform.position, 0.4f, results);
+                int length = Physics.OverlapSphereNonAlloc(transform.position, 0.4f, results, Physics.AllLayers, QueryTriggerInteraction.Ignore);
                 //get the closest one
                 float minDist = 1f;
                 int minIdx = 0;

@@ -15,7 +15,7 @@ public class CCPlayer : MonoBehaviour
   public float globalScaleVal = 0;
   Vector3 pAcc;
   Vector3 pVelo;
-  bool falling = false;
+  bool moving = false;
   CharacterController characterController;
   private void Awake()
   {
@@ -35,37 +35,37 @@ public class CCPlayer : MonoBehaviour
         pVelo = Vector3.down - 80f * (leftHand.forwardMomentumVec + rightHand.forwardMomentumVec);
         pAcc = Vector3.up * -9.8f;
       } else {
-        pVelo = -50f * (leftHand.forwardMomentumVec + rightHand.forwardMomentumVec);
+        pVelo = -50f * (leftHand.forwardMomentumVec + rightHand.forwardMomentumVec).withY(0);
         pAcc = Vector3.zero;
       }
   }
   private void Update()
   {
     //debugging
-    Vector3 curPos = transform.position;
-    curPos.y += leftHand.grabInput.joystickInput.y;
-    curPos.y += rightHand.grabInput.joystickInput.y;
-    transform.position = curPos;
-
     Vector3 finalMove = Vector3.zero;
+    finalMove.y += leftHand.grabInput.joystickInput.y;
+    finalMove.y += rightHand.grabInput.joystickInput.y;
 
     // Movement
-    if(isGrabbing){
-      falling = false;
-      pVelo += 0.5f * handDif(leftHand);
-      pVelo += 0.5f * handDif(rightHand);
-      Vector3 damp = ((1f - Time.deltaTime) * Vector3.one);
-      pVelo = Vector3.Scale(pVelo, damp);
-      finalMove += Time.deltaTime * pVelo;
-    } else if(!characterController.isGrounded){
-        if(!falling) {
-            // reset velocity
+    if (isGrabbing) {
+      moving = false;
+      // pVelo += 0.5f * handDif(leftHand);
+      // pVelo += 0.5f * handDif(rightHand);
+      // Vector3 damp = ((1f - Time.deltaTime) * Vector3.one);
+      // pVelo = Vector3.Scale(pVelo, damp);
+      // finalMove += Time.deltaTime * pVelo;
+    } else {
+        if(!moving) {
             ResetAcceleration();
-            falling = true;
+            moving = true;
         }
-        float armSpan = GetArmSpan();
-        pVelo += GetArmSpanForce();
-        pVelo.y = Mathf.Max(pVelo.y + pAcc.y * Time.deltaTime, -7.2f);
+        float armSpan = 0;
+        if (!characterController.isGrounded) {
+          // apply moving velocities if not grounded
+          armSpan = GetArmSpan();
+          pVelo += GetArmSpanForce();
+          pVelo.y = Mathf.Max(pVelo.y + pAcc.y * Time.deltaTime, -7.2f);
+        } 
         Vector3 damp = ((1f - 1.5f * Time.deltaTime) * Vector3.one).withY(armSpan);
         pVelo = Vector3.Scale(pVelo, damp);
         finalMove += Time.deltaTime * pVelo;
