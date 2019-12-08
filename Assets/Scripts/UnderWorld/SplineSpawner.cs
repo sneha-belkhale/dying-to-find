@@ -5,6 +5,7 @@ using UnityEditor;
 public class SplineSpawner : MonoBehaviour
 {
     public GameObject ss;
+    public GameObject platform;
     
     [Header("SPAWN PARAMS")]
     [SerializeField] float random = 360f;
@@ -21,17 +22,17 @@ public class SplineSpawner : MonoBehaviour
     public void AddObject(Transform parent)
     {
         float r = Random.Range(-20f, 20f);
-        SplineLine sl = Instantiate(ss, lastPosition, Quaternion.Euler(0f, (360f / 4f) * (count%4) + r, 0f), parent).GetComponent<SplineLine>();
+        float rz = Random.Range(1f, 6f);
+        SplineLine sl = Instantiate(ss, lastPosition.withY(lastPosition.y - rz), Quaternion.Euler(0f, (360f / 4f) * (count%4) + r, 0f), parent).GetComponent<SplineLine>();
         sl.gameObject.SetActive(true);
         sl.gameObject.name = "Spline";
         lastPosition = sl.Init();
         count++;
         //every 8 lines, we add a platform, 
-        // if(count%5 == 4){
-        //     Instantiate(platform, sl.endPos, Quaternion.identity);
-        //     //instantiate 3 connecting lines
-
-        // }
+        if(count%5 == 4 && rz > 4f){
+            GameObject pl = Instantiate(platform, sl.endPos.withY(sl.endPos.y + 2f), Quaternion.identity, sl.gameObject.transform);
+            pl.SetActive(true);
+        }
     }
 
     private int curChunkPos = 1;

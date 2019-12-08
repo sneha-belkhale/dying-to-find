@@ -29,6 +29,7 @@ public class SplineLine : MonoBehaviour
             }
         }
         line = GetComponent<LineRenderer>();
+        line.widthMultiplier = 0.4f + Random.Range(-0.2f, 0.2f);
 
         for (int i = 10; i < splineCount; i += 10){
             GameObject go = new GameObject();
@@ -54,7 +55,8 @@ public class SplineLine : MonoBehaviour
             // Instantiate(viz, splinePoints[i], Quaternion.identity);
         }
         line.SetPositions(splinePoints);
-        endPos = splineTargets[splineCount - 10];
+
+        endPos = splineTargets[splineCount - 5 - Random.Range(0, 10)];
         return splineTargets[splineCount - cutOff];
     }
 
