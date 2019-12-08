@@ -70,6 +70,7 @@ Material:
     - _IgnoreGlobalFade: 1
     - _IgnoreGlobalStretch: 1
     - _IgnoreGlobalStretchFrag: 0
+    - _Leveling: 1
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
@@ -86,7 +87,7 @@ Material:
     - _ZWrite: 1
     m_Colors:
     - _AmbientLightColor: {r: 0, g: 0, b: 0, a: 1}
-    - _Color: {r: 0.3018868, g: 0.024219012, b: 0, a: 1}
+    - _Color: {r: 0.01886791, g: 0.01886791, b: 0.01886791, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _RimColor: {r: 0, g: 0, b: 0, a: 1}
     - _VertOutVal: {r: 0, g: 0, b: 0, a: 0}

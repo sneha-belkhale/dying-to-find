@@ -7,7 +7,6 @@ public class UnderWorldLevelCode : MonoBehaviour
     [SerializeField] Transform startingSpawn;
     void Start()
     {
-
         CCPlayer.main.Teleport(startingSpawn);
         CCPlayer.main.antiGravity = true;
         CCPlayer.main.ResetAcceleration();
