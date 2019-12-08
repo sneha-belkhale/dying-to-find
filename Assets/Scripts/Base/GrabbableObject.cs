@@ -8,16 +8,17 @@ public class GrabbableObject : MonoBehaviour {
   public CCHand[] grabber = new CCHand[2]; 
   public Vector3 grabPoint;
   public Material mat;
+  protected float falloutRadius = 0.2f;
   public virtual void onDown() {}
   public virtual void onHold() {}
   public virtual void onRelease() {}
 
   public void onDownBase() {
     onDown();
-    // mat.SetVector(
-    // "_WarpCenter", 
-    // new Vector4(grabPoint.x, grabPoint.y, grabPoint.z, 25));
-    // mat.SetFloat("_IgnoreGlobalStretch", 1);
+    mat.SetVector(
+    "_WarpCenter", 
+    new Vector4(grabPoint.x, grabPoint.y, grabPoint.z, falloutRadius));
+    mat.SetFloat("_IgnoreGlobalStretch", 1);
   }
 
   Vector3 getGrabCenter() {
@@ -32,13 +33,13 @@ public class GrabbableObject : MonoBehaviour {
   }
   public void onHoldBase() {
     onHold();
-    // mat.SetVector("_WarpDir", 15f * getGrabCenter());
+    mat.SetVector("_WarpDir", 15f * getGrabCenter());
   }
   public void onReleaseBase() {
     onRelease();
-    // mat.SetVector("_WarpDir", Vector3.zero);
-    // mat.SetVector(
-    // "_WarpCenter", 
-    // new Vector4(100, 100, 100, 0));
+    mat.SetVector("_WarpDir", Vector3.zero);
+    mat.SetVector(
+    "_WarpCenter", 
+    new Vector4(100, 100, 100, 0));
   }
 }

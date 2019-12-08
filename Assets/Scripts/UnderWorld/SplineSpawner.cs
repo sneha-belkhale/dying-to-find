@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEditor;
 public class SplineSpawner : MonoBehaviour
 {
-    [SerializeField] GameObject ss;
+    public GameObject ss;
     
     [Header("SPAWN PARAMS")]
     [SerializeField] float random = 360f;
@@ -36,6 +36,8 @@ public class SplineSpawner : MonoBehaviour
 
     private int curChunkPos = 1;
     private int lastChunkPos = 1;
+    public Transform sphere;
+    public float w;
     public void Update() {
         curChunkPos = Mathf.RoundToInt(CCPlayer.main.transform.position.y / -30f);
         if(curChunkPos < 2) return;
@@ -99,6 +101,19 @@ public class SplineSpawnerEditor : Editor
         {
             myScript.Clear();
         }
+        if(GUILayout.Button("Refresh"))
+        {
+            
+        }
+
+    //                         //FOR DEBUGGING STRETCH EFFECT
+    // Vector3 closestPoint = myScript.ss.GetComponent<BoxCollider>().ClosestPoint(myScript.sphere.position);
+    // Debug.Log(closestPoint);
+    // Vector3 dir = myScript.sphere.position - closestPoint;
+    // myScript.ss.GetComponent<LineRenderer>().sharedMaterial.SetVector("_WarpDir", dir);
+    // myScript.ss.GetComponent<LineRenderer>().sharedMaterial.SetVector(
+    //                     "_WarpCenter",
+    //                     new Vector4(closestPoint.x, closestPoint.y, closestPoint.z, myScript.w));
     }
 }
 
