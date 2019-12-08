@@ -25,12 +25,12 @@ public class KeyboardMover : MonoBehaviour
 
         if (Input.GetKey(KeyCode.B))
         {
-          boost = 20.0f;
+            boost = 20.0f;
         }
 
-        if (Input.GetKey(KeyCode.R))
-            yaw -= mouseSpeed * Time.deltaTime;
         if (Input.GetKey(KeyCode.E))
+            yaw -= mouseSpeed * Time.deltaTime;
+        if (Input.GetKey(KeyCode.R))
             yaw += mouseSpeed * Time.deltaTime;
 
         //pitch -= mouseSpeed * Input.GetAxis("Mouse Y");
