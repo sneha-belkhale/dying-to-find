@@ -7,9 +7,9 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Lines
+  m_Name: Goo
   m_Shader: {fileID: 4800000, guid: 762cfb24fae0a4c118a739037fb0f9d2, type: 3}
-  m_ShaderKeywords: USE_EFFECTS _USEPOINTCOLOR_ON
+  m_ShaderKeywords: USE_EFFECTS
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -40,7 +40,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 7915cd277c5c847c3b576c84e2feffad, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -62,28 +62,28 @@ Material:
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _Effects: 1
-    - _FadeOutVal: 0
+    - _FadeOutVal: 0.45
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
     - _IgnoreGlobalStretch: 0
-    - _IgnoreGlobalStretchFrag: 0
+    - _IgnoreGlobalStretchFrag: 1
     - _Leveling: 0
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
-    - _Offset: 0
+    - _Offset: 131.39029
     - _Parallax: 0.02
-    - _Scrolling: 0
+    - _Scrolling: 0.041
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _UVSec: 0
-    - _UsePointColor: 1
+    - _UsePointColor: 0
     - _ZWrite: 1
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _VertOutVal: {r: 0, g: 0, b: 0, a: 1}
-    - _WarpCenter: {r: 94.63, g: 1.2712362, b: 6.7, a: 0.2}
-    - _WarpDir: {r: 0, g: 0.03876376, b: 0, a: 0}
+    - _VertOutVal: {r: 0, g: -0.37, b: 0, a: 1}
+    - _WarpCenter: {r: -7.5, g: -117.9, b: -7.2, a: 3.78}
+    - _WarpDir: {r: 0, g: 0, b: 0, a: 0}

@@ -12,6 +12,7 @@
         [Space(5)]
         [Header(Effects)]
         [Toggle(USE_EFFECTS)] _Effects("Use Effects", Float) = 1
+        _Scrolling ("Scroll", Range(0, 1)) = 0.0
         _FadeOutVal ("Fade out percent", Range(0, 1)) = 0.0
         _VertOutVal ("Vert out direction", Vector) = (0,0,0,1)
         _WarpDir ("Warp direction", Vector) = (0,0,0,0)
@@ -67,6 +68,7 @@
                 float4 _VertOutVal;
                 float4 _WarpCenter;
                 float4 _WarpDir;
+                float _Scrolling;
             #endif
 
             #if (USE_LEVELING)
@@ -88,7 +90,7 @@
                 #endif
 
                 #if (USE_EFFECTS)
-                    float dissolve = tex2Dlod(_MainTex, float4(v.uv, 0,0)).r;
+                    float dissolve = tex2Dlod(_MainTex, float4(v.uv + _Scrolling * _Time.y, 0,0)).r;
                     v.vertex.xyz += _VertOutVal.w * 3 * _FadeOutVal *  dissolve * _VertOutVal.xyz;
                     // half usingGlobalFade = step(0.001, _GlobalFadeOut) * (1 - _IgnoreGlobalFade);
                     // float fadeOutVal = lerp(_FadeOutVal, _GlobalFadeOut, usingGlobalFade);
@@ -99,7 +101,7 @@
 
                 #if (USE_EFFECTS)
                     float3 dist = (vWorldPos - _WarpCenter.xyz);
-                    half radialFalloff = min(dot(dist, dist) * _WarpCenter.w, 1);
+                    half radialFalloff = min(dot(dist, dist) * dissolve * _WarpCenter.w, 1);
                     vWorldPos += (1-radialFalloff) * _WarpDir.xyz;
                 #endif
 
