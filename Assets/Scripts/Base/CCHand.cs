@@ -102,10 +102,12 @@ public class CCHand : MonoBehaviour
 
     public Vector3 forwardMomentumVec = Vector3.zero;
     IEnumerator forwardMomentum () {
+        Debug.Log("Forward momentum");
         forwardMomentumVec = getAverageHandDif();
         forwardMomentumVec = CCPlayer.main.antiGravity ? forwardMomentumVec : forwardMomentumVec.withY(0);
         while(forwardMomentumVec.sqrMagnitude > 0.001f){
             forwardMomentumVec = (1f - 1.5f * Time.deltaTime) * forwardMomentumVec;
+            CCPlayer.main.transform.position -= forwardMomentumVec;
             yield return 0;
         }
         forwardMomentumVec = Vector3.zero;

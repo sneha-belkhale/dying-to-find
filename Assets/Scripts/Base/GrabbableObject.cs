@@ -8,7 +8,7 @@ public class GrabbableObject : MonoBehaviour {
   public CCHand[] grabber = new CCHand[2]; 
   public Vector3 grabPoint;
   public Material mat;
-  protected float falloutRadius = 0.2f;
+  protected float falloutRadius = 25f;
   public virtual void onDown() {}
   public virtual void onHold() {}
   public virtual void onRelease() {}
