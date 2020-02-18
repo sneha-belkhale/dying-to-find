@@ -56,7 +56,7 @@ public class InstancedVoxels : MonoBehaviour
                         voxelGrid.Add(pos, new Vector2());
                     }
                     Vector2 val = voxelGrid[pos];
-                    val.x = Mathf.Min(val.x + Time.deltaTime, timeToLive);
+                    val.x = Mathf.Min(val.x + 5f * Time.deltaTime, timeToLive);
                     val.y = 1f;
                     voxelGrid[pos] = val;
                 }
