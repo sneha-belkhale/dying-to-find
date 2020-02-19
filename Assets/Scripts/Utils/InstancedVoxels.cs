@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
-
 public class InstancedVoxels : MonoBehaviour
 {
     public GameObject prefab;
@@ -14,6 +13,8 @@ public class InstancedVoxels : MonoBehaviour
     private BoxCollider mCollider;
     private Dictionary<Vector3, Vector2> voxelGrid;
     private Matrix4x4[] matrices;
+
+    float lastY;
     public void Round(ref Vector3 v)
     {
         v.x = Mathf.Round(v.x);
@@ -31,6 +32,7 @@ public class InstancedVoxels : MonoBehaviour
 
     private Matrix4x4[] GetPointsInsideOfCollider()
     {
+        float moveDif = Mathf.Clamp(Mathf.Abs(lastY  - transform.position.y)/.1f, 0.1f, 1f);
         int width = Mathf.FloorToInt(2f * mCollider.bounds.extents.x/gridSize);
         int height = Mathf.FloorToInt(2f * mCollider.bounds.extents.y/gridSize);
         int depth = Mathf.FloorToInt(2f * mCollider.bounds.extents.z/gridSize);
@@ -56,7 +58,7 @@ public class InstancedVoxels : MonoBehaviour
                         voxelGrid.Add(pos, new Vector2());
                     }
                     Vector2 val = voxelGrid[pos];
-                    val.x = Mathf.Min(val.x + 5f * Time.deltaTime, timeToLive);
+                    val.x = Mathf.MoveTowards(val.x, timeToLive, moveDif * timeToLive);
                     val.y = 1f;
                     voxelGrid[pos] = val;
                 }
@@ -70,10 +72,10 @@ public class InstancedVoxels : MonoBehaviour
             Vector2 val = voxelGrid[pos];
             if(val.y < 1f)
             {
-                val.x -= Time.deltaTime;
+                val.x = Mathf.MoveTowards(val.x, 0f, 0.2f * moveDif * timeToLive);
             }
             val.y = 0f;
-            if(val.x <= 0f)  
+            if(val.x <= moveDif*0.04f)  
             {
                voxelGrid.Remove(pos);
             }
@@ -92,6 +94,7 @@ public class InstancedVoxels : MonoBehaviour
     {
         Matrix4x4[] batchedMatrices = GetPointsInsideOfCollider();
         Graphics.DrawMeshInstanced(mMeshFilter.sharedMesh, 0, meshMaterial, batchedMatrices, batchedMatrices.Length);
+        lastY = transform.position.y;
     }
 
 }

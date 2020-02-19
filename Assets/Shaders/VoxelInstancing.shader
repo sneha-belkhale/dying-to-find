@@ -8,11 +8,8 @@ Shader "Custom/MinimalInstancedShader"
 
     SubShader
     {
-        Tags { "RenderType"="Transparent" }
+        Tags { "RenderType"="Opaque" }
         LOD 100
-        Blend SrcAlpha OneMinusSrcAlpha
-        Cull Off
-        ZTest Off
         Pass
         {
             CGPROGRAM
@@ -46,13 +43,15 @@ Shader "Custom/MinimalInstancedShader"
                 v2f o;
                 UNITY_SETUP_INSTANCE_ID(v);            
                 o.vertex = UnityObjectToClipPos(v.vertex);
-                o.uv = v.uv;
+                float4 worldSpace = mul(unity_ObjectToWorld, v.vertex);
+                o.uv = worldSpace;
                 return o;
             }
 
             fixed4 frag(v2f i) : SV_Target
             {
-                float r = step(0.5, round(frac(i.uv.y + 30 * _Time.x) * 5.0)/5.0) + 0.2;
+                // float r = step(0.3, round(frac(5 * i.uv.y + 30 * _Time.x) * 5.0)/5.0);
+                float r = 0.3;
                 i.color = float4(r,r,r,r);
                 return i.color;
             }
