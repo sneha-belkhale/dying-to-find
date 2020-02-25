@@ -3,28 +3,35 @@ using UnityEngine.SceneManagement;
 using System.Collections;
 
 //Static Class to hand grab state
-public class CCSceneUtils : MonoBehaviour {
+public class CCSceneUtils : MonoBehaviour
+{
     public static CCSceneUtils instance;
     public Transform instantiatedObjectRoot;
+    public string startScene;
+
     private void Awake()
     {
-        if (instance == null) {
+        if (instance == null)
+        {
             instance = this;
         }
-        else {
+        else
+        {
             Destroy(instance);
             instance = this;
         }
-        #if !UNITY_EDITOR
-            SceneManager.LoadScene("UnderWorldScene", LoadSceneMode.Additive);
-        #endif
+#if !UNITY_EDITOR
+        SceneManager.LoadScene(startScene, LoadSceneMode.Additive);
+#endif
     }
     private void OnDestroy()
     {
         instance = null;
     }
-    public static IEnumerator DoFadeSceneLoadCoroutine (string sceneName, string currentSceneName) {
-        foreach (Transform child in instance.instantiatedObjectRoot) {
+    public static IEnumerator DoFadeSceneLoadCoroutine(string sceneName, string currentSceneName)
+    {
+        foreach (Transform child in instance.instantiatedObjectRoot)
+        {
             GameObject.Destroy(child.gameObject);
         }
         SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
