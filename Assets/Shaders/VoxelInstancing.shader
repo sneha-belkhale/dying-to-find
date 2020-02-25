@@ -17,6 +17,7 @@ Shader "Custom/MinimalInstancedShader"
             #pragma vertex vert
             #pragma fragment frag
             #pragma multi_compile_instancing
+            #pragma multi_compile_fog
 
             #include "UnityCG.cginc"
 
@@ -31,7 +32,7 @@ Shader "Custom/MinimalInstancedShader"
             {
                 float4 vertex : SV_POSITION;
                 float4 uv : TEXCOORD0;
-                float4 color : COLOR;
+                UNITY_FOG_COORDS(1)
             };
 
             UNITY_INSTANCING_BUFFER_START(Props)
@@ -45,6 +46,7 @@ Shader "Custom/MinimalInstancedShader"
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 float4 worldSpace = mul(unity_ObjectToWorld, v.vertex);
                 o.uv = v.uv;
+                UNITY_TRANSFER_FOG(o,o.vertex);
                 return o;
             }
 
@@ -55,8 +57,9 @@ Shader "Custom/MinimalInstancedShader"
                 // {
                 //     r = 0.3;
                 // }
-                i.color = float4(r,r,r,r);
-                return i.color;
+                float4 col = float4(r,r,r,r);
+                UNITY_APPLY_FOG(i.fogCoord, col);
+                return col;
             }
             ENDCG
         }
