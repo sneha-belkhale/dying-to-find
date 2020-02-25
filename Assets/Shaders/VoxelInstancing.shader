@@ -44,14 +44,17 @@ Shader "Custom/MinimalInstancedShader"
                 UNITY_SETUP_INSTANCE_ID(v);            
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 float4 worldSpace = mul(unity_ObjectToWorld, v.vertex);
-                o.uv = worldSpace;
+                o.uv = v.uv;
                 return o;
             }
 
             fixed4 frag(v2f i) : SV_Target
             {
-                // float r = step(0.3, round(frac(5 * i.uv.y + 30 * _Time.x) * 5.0)/5.0);
                 float r = 0.3;
+                // if(i.uv.x < 0.1 || i.uv.x > 0.9 || i.uv.y < 0.1 || i.uv.y > 0.9)
+                // {
+                //     r = 0.3;
+                // }
                 i.color = float4(r,r,r,r);
                 return i.color;
             }

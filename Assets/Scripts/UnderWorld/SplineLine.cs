@@ -21,7 +21,7 @@ public class SplineLine : MonoBehaviour
 
         int endIdx = splineCount - 5 - (int)(5f / len) * Random.Range(0, 10);
         endPos = splineTargets[endIdx];
-        attachPos = splineTargets[endIdx - 10 - (int)(5f / len) * Random.Range(0,4)];
+        attachPos = splineTargets[endIdx];
         return splineTargets[splineCount - cutOff];
     }
 

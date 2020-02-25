@@ -35,15 +35,9 @@ public class SplineSpawner : MonoBehaviour
   
         //every 8 lines, we add a platform, 
         if (count%5 == 4 && rz > 4f) {
-            GameObject pl = Instantiate(platform, sl.endPos.withY(sl.endPos.y + 2f * spacing), Quaternion.identity, sl.gameObject.transform);
-            SplineLine sls = Instantiate(ss, sl.endPos, Quaternion.identity, pl.transform).GetComponent<SplineLine>();
-            Vector3[] splineTargets = new Vector3[3];
-            splineTargets[0] = sl.attachPos;
-            splineTargets[1] = 0.5f * (sl.attachPos + pl.transform.position) + 3f * length * sl.transform.forward;
-            splineTargets[2] = pl.transform.position;
-            sls.InitSimple(splineTargets);
-            sls.line.widthMultiplier *= 0.5f;
-            sls.gameObject.SetActive(true);
+            Vector3 endPos = sl.attachPos;
+            Quaternion lookRot = Quaternion.LookRotation(endPos.withY(0).normalized);
+            GameObject pl = Instantiate(platform, endPos, lookRot, sl.gameObject.transform);
             pl.SetActive(true);
         }
         if(count %30 == 0){
@@ -56,7 +50,7 @@ public class SplineSpawner : MonoBehaviour
     public Transform sphere;
     public float w;
     public void Update() {
-        curChunkPos = Mathf.RoundToInt((CCPlayer.main.transform.position.y+30f) / -181f);
+        curChunkPos = Mathf.RoundToInt((CCPlayer.main.transform.position.y+30f) / -152f);
         if(curChunkPos < 2) return;
         if(lastChunkPos == curChunkPos) return;
         // reset last ones 
