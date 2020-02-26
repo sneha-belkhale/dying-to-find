@@ -39,7 +39,10 @@ public class CCHand : MonoBehaviour
                 }
                 if (minDist < 0.2f) {
                     grabbedAgent = results[minIdx].gameObject.GetComponent<GrabbableObject>();
+                    Debug.Log(results[minIdx].gameObject.name);
+
                     if(grabbedAgent != null){
+
                         grabbedAgent.grabber[(int)hand] = this;
                         grabbedAgent.grabPoint = lastClosestPoint;
                         lastGrabbedAgentPos = grabbedAgent.transform.position;
@@ -86,10 +89,12 @@ public class CCHand : MonoBehaviour
     void HandleGrabHold() {
         lastHandDif = transform.parent.TransformDirection(transform.localPosition - lastHandPos);
         AddToList(lastHandDif);
-        CCPlayer.main.transform.position =
-        CCPlayer.main.antiGravity ?
-            CCPlayer.main.transform.position - lastHandDif:
-            CCPlayer.main.transform.position - lastHandDif.withY(0);
+        if(!(grabbedAgent is StationaryGrabbableObject)){
+            CCPlayer.main.transform.position =
+            CCPlayer.main.antiGravity ?
+                CCPlayer.main.transform.position - lastHandDif:
+                CCPlayer.main.transform.position - lastHandDif.withY(0);
+        };
         grabbedAgent.onHoldBase();
     }
 

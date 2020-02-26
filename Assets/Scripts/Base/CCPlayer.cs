@@ -32,9 +32,6 @@ public class CCPlayer : MonoBehaviour
       if (antiGravity) {
         pVelo = Vector3.down - 80f * (leftHand.forwardMomentumVec + rightHand.forwardMomentumVec);
         pAcc = Vector3.up * -9.8f;
-      } else {
-        pVelo = -50f * (leftHand.forwardMomentumVec + rightHand.forwardMomentumVec).withY(0);
-        pAcc = Vector3.zero;
       }
   }
   private void Update()
@@ -47,7 +44,7 @@ public class CCPlayer : MonoBehaviour
     // Movement
     if (isGrabbing) {
       moving = false;
-    } else {
+    } else if (antiGravity) {
         if(!moving) {
             ResetAcceleration();
             moving = true;
