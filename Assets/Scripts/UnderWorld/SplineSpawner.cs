@@ -37,6 +37,7 @@ public class SplineSpawner : MonoBehaviour
         if (count%5 == 4 && rz > 4f) {
             Vector3 endPos = sl.attachPos;
             Quaternion lookRot = Quaternion.LookRotation(endPos.withY(0).normalized);
+            endPos = endPos.withY(endPos.y - 7f);
             GameObject pl = Instantiate(platform, endPos, lookRot, sl.gameObject.transform);
             pl.SetActive(true);
         }
