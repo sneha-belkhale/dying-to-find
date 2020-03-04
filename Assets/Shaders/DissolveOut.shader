@@ -80,6 +80,7 @@
             float _GlobalStretch;
             float _Offset;
 
+            float4 _GlobalPulseColor;
             float4 _GlobalPulseOrigin;
             float _GlobalPulseTimeElapsed;
 
@@ -139,8 +140,8 @@
 
                 // apply fog
                 UNITY_APPLY_FOG(i.fogCoord, col);
-                col.r -= p;
-                col.gb += 0.8 * p;
+                col = lerp(col, _GlobalPulseColor, p);
+
 
                 return col;
             }

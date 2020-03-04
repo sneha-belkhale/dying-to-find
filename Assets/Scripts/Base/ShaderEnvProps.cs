@@ -5,6 +5,7 @@ public class ShaderEnvProps : MonoBehaviour
     public static ShaderEnvProps instance;
 
     float lastGlobalPulse;
+    [SerializeField] Color globalPulseColor;
 
     private void Awake()
     {
@@ -17,6 +18,7 @@ public class ShaderEnvProps : MonoBehaviour
             Destroy(instance);
             instance = this;
         }
+        Shader.SetGlobalVector("_GlobalPulseColor", globalPulseColor);
     }
 
     private void Update()
