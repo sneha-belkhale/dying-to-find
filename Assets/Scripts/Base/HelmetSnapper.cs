@@ -26,7 +26,7 @@ public class HelmetSnapper: MonoBehaviour {
     }
     IEnumerator SuckUp()
     {
-        // scale down the character while maintaining head position, send two pulses out
+        // scale down the character while maintaining head position, send three pulses out
         float initialHeight = snapTarget.position.y - targetRoot.position.y;
         Vector3 initialScale = targetRoot.localScale;
         ShaderEnvProps.instance.RecordGlobalPulse(snapTarget.position);
@@ -36,9 +36,11 @@ public class HelmetSnapper: MonoBehaviour {
             targetRoot.localPosition = scaledHeight * Vector3.up;
         }, 1.3f);
 
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.4f);
         ShaderEnvProps.instance.RecordGlobalPulse(snapTarget.position);
-        yield return new WaitForSeconds(0.8f);
+        yield return new WaitForSeconds(0.6f);
+        ShaderEnvProps.instance.RecordGlobalPulse(snapTarget.position);
+        yield return new WaitForSeconds(0.3f);
         
         rb.isKinematic = false;
         targetRoot.gameObject.SetActive(false);
