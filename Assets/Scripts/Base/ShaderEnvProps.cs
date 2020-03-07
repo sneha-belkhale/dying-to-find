@@ -30,6 +30,7 @@ public class ShaderEnvProps : MonoBehaviour
 
     public void RecordGlobalPulse(Vector3 pos)
     {
+        if(Time.fixedTime - lastGlobalPulse < 0.2f) return;
         Shader.SetGlobalVector("_GlobalPulseOrigin", pos);
         lastGlobalPulse = Time.fixedTime;
     }

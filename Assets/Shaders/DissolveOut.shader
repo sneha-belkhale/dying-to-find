@@ -136,7 +136,7 @@
                 // global pulse
                 float pulseStep = _GlobalPulseTimeElapsed;
                 float r = min(length(i.vWorldPos.xyz - _GlobalPulseOrigin.xyz)*0.02,1);    
-                float p = step(abs(pulseStep - r),0.01);
+                float p = step(abs(pulseStep - r),0.015);
 
                 // apply fog
                 UNITY_APPLY_FOG(i.fogCoord, col);

@@ -69,12 +69,12 @@ Shader "Custom/MinimalInstancedShader"
 
                 // global pulse
                 float pulseStep = step(0, _GlobalPulseTimeElapsed);
-                float radialFalloff = min(length(i.vWorldPos.xyz - _GlobalPulseOrigin.xyz) * 0.1, 1);    
+                float radialFalloff = min(length(i.vWorldPos.xyz - _GlobalPulseOrigin.xyz) * 0.2, 1);    
                 float p = step(abs(_GlobalPulseTimeElapsed - radialFalloff), 0.01);
 
                 float pulseAmt = p;
                 #ifdef UNITY_INSTANCING_ENABLED
-                    pulseAmt += pulseStep * step(fmod(i.instanceID,80.),1);
+                    pulseAmt += pulseStep * step(fmod(i.instanceID, 80.),1);
                 #endif
 
                 col = lerp(col, _GlobalPulseColor, isCorner * pulseAmt);

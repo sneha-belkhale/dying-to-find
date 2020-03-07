@@ -7,7 +7,6 @@ public class SplineLine : MonoBehaviour
     public LineRenderer line;
     [SerializeField] GameObject viz;
     [SerializeField] int linePointsPerMeter = 4;
-    public Vector3 endPos;
     public Vector3 attachPos;
     int cutOff = 52;
     float len;
@@ -19,8 +18,7 @@ public class SplineLine : MonoBehaviour
         Vector3[] splineTargets = generateSplineTargets(splineCount, out distance);
         setSplineLinePoints(splineTargets, distance);
 
-        int endIdx = splineCount - 5 - (int)(5f / len) * Random.Range(0, 10);
-        endPos = splineTargets[endIdx];
+        int endIdx = splineCount - 5 - (int)(5f / len) * Random.Range(5, 20);
         attachPos = splineTargets[endIdx];
         return splineTargets[splineCount - cutOff];
     }

@@ -16,7 +16,7 @@ public class HelmetSnapper: MonoBehaviour {
 
     public void Update()
     {
-        if(Vector3.SqrMagnitude(transform.position - snapTarget.position) < 1f && !snapped)
+        if(Vector3.SqrMagnitude(transform.position - snapTarget.position) < 0.5f && !snapped)
         {
             rb.isKinematic = true;
             transform.position = snapTarget.position;
@@ -44,6 +44,10 @@ public class HelmetSnapper: MonoBehaviour {
         
         rb.isKinematic = false;
         targetRoot.gameObject.SetActive(false);
+
+        ShaderEnvProps.instance.RecordGlobalPulse(snapTarget.position);
+
+
         yield return 0;
     }
 }

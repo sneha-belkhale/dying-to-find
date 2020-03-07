@@ -1025,7 +1025,7 @@ Transform:
   m_GameObject: {fileID: 7041956957990964251}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3, y: 3, z: 3}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_Children:
   - {fileID: 8458581666686150953}
   - {fileID: 6043912879312638983}
@@ -1281,7 +1281,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: 4272851405082507420, guid: 9976d5c3ae49a4c4d9b1f6159f90d770, type: 3}
   meshMaterial: {fileID: 2100000, guid: 5a278389e8e87406eadf77fd7334b83f, type: 2}
-  gridSize: 0.18
+  gridSize: 0.09
   timeToLive: 1
   spacing: 1
   colliders:

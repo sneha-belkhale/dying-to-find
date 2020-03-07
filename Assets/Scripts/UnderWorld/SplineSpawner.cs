@@ -34,15 +34,15 @@ public class SplineSpawner : MonoBehaviour
         count++;
   
         //every 8 lines, we add a platform, 
-        if (count%5 == 4 && rz > 4f) {
+        if (count%5 == 4 && rz > 2f) {
             Vector3 endPos = sl.attachPos;
             Quaternion lookRot = Quaternion.LookRotation(endPos.withY(0).normalized);
-            endPos = endPos.withY(endPos.y - 7f);
+            endPos = endPos.withY(endPos.y - 3.3f);
             GameObject pl = Instantiate(platform, endPos, lookRot, sl.gameObject.transform);
             pl.SetActive(true);
         }
         if(count %30 == 0){
-            Debug.Log(sl.endPos.y / Mathf.Floor(count/30));
+            Debug.Log(sl.attachPos.y / Mathf.Floor(count/30));
         }
     }
 
