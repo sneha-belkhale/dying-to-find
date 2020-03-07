@@ -33,7 +33,12 @@ public class GrabbableObject : MonoBehaviour {
   }
   public void onHoldBase() {
     onHold();
-    mat.SetVector("_WarpDir", 15f * getGrabCenter());
+    Vector3 grabCenter = getGrabCenter();
+    if(grabCenter.magnitude > 0.05f)
+    {
+      ShaderEnvProps.instance.RecordGlobalPulse(grabPoint);
+    }
+    mat.SetVector("_WarpDir", 15f * grabCenter);
   }
   public void onReleaseBase() {
     onRelease();

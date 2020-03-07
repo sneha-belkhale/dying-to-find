@@ -56,6 +56,7 @@
                 float4 color : COLOR;
                 UNITY_FOG_COORDS(1)
                 float4 vertex : SV_POSITION;
+                float3 vWorldPos : TEXCOORD2;
             };
 
             sampler2D _MainTex;
@@ -72,12 +73,18 @@
             #if (USE_LEVELING)
                 float _LevelAmt;
             #endif
-
+                
             float _UsePointColor;
             float _IgnoreGlobalStretch;
             float _IgnoreGlobalStretchFrag;
             float _GlobalStretch;
             float _Offset;
+
+            float4 _GlobalPulseColor;
+            float4 _GlobalPulseOrigin;
+            float _GlobalPulseTimeElapsed;
+
+            float _GameTime;
 
             v2f vert (appdata v)
             {
@@ -95,17 +102,18 @@
                     v.vertex.y *= (1 + (1 - _IgnoreGlobalStretch) * _GlobalStretch);
                 #endif
 
-                float3 vWorldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
+                o.vWorldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
 
                 #if (USE_EFFECTS)
-                    float3 dist = (vWorldPos - _WarpCenter.xyz);
+                    float3 dist = (o.vWorldPos - _WarpCenter.xyz);
                     half radialFalloff = min(dot(dist, dist) * _WarpCenter.w, 1);
-                    vWorldPos += (1-radialFalloff) * _WarpDir.xyz;
+                    o.vWorldPos += (1-radialFalloff) * _WarpDir.xyz;
                 #endif
 
-                o.vertex = UnityWorldToClipPos(vWorldPos);
+                o.vertex = UnityWorldToClipPos(o.vWorldPos);
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
                 o.color = v.color;
+
                 UNITY_TRANSFER_FOG(o,o.vertex);
                 return o;
             }
@@ -125,8 +133,16 @@
                     col += _FadeOutVal * isGlowing * fixed4(0.5,0.5,0.5,1);
                 #endif
 
+                // global pulse
+                float pulseStep = _GlobalPulseTimeElapsed;
+                float r = min(length(i.vWorldPos.xyz - _GlobalPulseOrigin.xyz)*0.02,1);    
+                float p = step(abs(pulseStep - r),0.015);
+
                 // apply fog
                 UNITY_APPLY_FOG(i.fogCoord, col);
+                col = lerp(col, _GlobalPulseColor, p);
+
+
                 return col;
             }
             ENDCG

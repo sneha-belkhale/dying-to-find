@@ -3,16 +3,12 @@ Shader "Custom/MinimalInstancedShader"
 {
     Properties
     {
-        _Color("Color", Color) = (1, 1, 1, 1)
     }
 
     SubShader
     {
-        Tags { "RenderType"="Transparent" }
+        Tags { "RenderType"="Opaque" }
         LOD 100
-        Blend SrcAlpha OneMinusSrcAlpha
-        Cull Off
-        ZTest Off
         Pass
         {
             CGPROGRAM
@@ -20,6 +16,7 @@ Shader "Custom/MinimalInstancedShader"
             #pragma vertex vert
             #pragma fragment frag
             #pragma multi_compile_instancing
+            #pragma multi_compile_fog
 
             #include "UnityCG.cginc"
 
@@ -34,27 +31,55 @@ Shader "Custom/MinimalInstancedShader"
             {
                 float4 vertex : SV_POSITION;
                 float4 uv : TEXCOORD0;
-                float4 color : COLOR;
+                float4 vWorldPos : TEXCOORD1;
+                UNITY_VERTEX_INPUT_INSTANCE_ID
+                UNITY_FOG_COORDS(2)
             };
 
             UNITY_INSTANCING_BUFFER_START(Props)
-            UNITY_DEFINE_INSTANCED_PROP(float4, _Color)
             UNITY_INSTANCING_BUFFER_END(Props)
+
+            float4 _GlobalPulseColor;
+            float4 _GlobalPulseOrigin;
+            float _GlobalPulseTimeElapsed;
 
             v2f vert(appdata v)
             {
                 v2f o;
-                UNITY_SETUP_INSTANCE_ID(v);            
+                UNITY_SETUP_INSTANCE_ID(v);   
+                UNITY_TRANSFER_INSTANCE_ID(v, o);         
                 o.vertex = UnityObjectToClipPos(v.vertex);
+                o.vWorldPos = mul(unity_ObjectToWorld, v.vertex);
                 o.uv = v.uv;
+                UNITY_TRANSFER_FOG(o,o.vertex);
                 return o;
             }
 
             fixed4 frag(v2f i) : SV_Target
             {
-                float r = step(0.5, round(frac(i.uv.y + 30 * _Time.x) * 5.0)/5.0) + 0.2;
-                i.color = float4(r,r,r,r);
-                return i.color;
+                UNITY_SETUP_INSTANCE_ID(i);
+                float4 col = 0.3 * float4(1,1,1,1);
+
+                float isCorner = max(
+                    step(min(i.uv.x, 1-i.uv.x),0.1),
+                    step(min(i.uv.y, 1-i.uv.y),0.1)
+                );
+
+                UNITY_APPLY_FOG(i.fogCoord, col);
+
+                // global pulse
+                float pulseStep = step(0, _GlobalPulseTimeElapsed);
+                float radialFalloff = min(length(i.vWorldPos.xyz - _GlobalPulseOrigin.xyz) * 0.2, 1);    
+                float p = step(abs(_GlobalPulseTimeElapsed - radialFalloff), 0.01);
+
+                float pulseAmt = p;
+                #ifdef UNITY_INSTANCING_ENABLED
+                    pulseAmt += pulseStep * step(fmod(i.instanceID, 80.),1);
+                #endif
+
+                col = lerp(col, _GlobalPulseColor, isCorner * pulseAmt);
+
+                return col;
             }
             ENDCG
         }

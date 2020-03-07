@@ -46,9 +46,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: 4272851405082507420, guid: 9976d5c3ae49a4c4d9b1f6159f90d770, type: 3}
   meshMaterial: {fileID: 2100000, guid: 5a278389e8e87406eadf77fd7334b83f, type: 2}
-  gridSize: 0.06
+  gridSize: 0.05
   timeToLive: 0.2
-  spacing: 0.94
+  spacing: 0.97
 --- !u!65 &4743078218841579841
 BoxCollider:
   m_ObjectHideFlags: 0
