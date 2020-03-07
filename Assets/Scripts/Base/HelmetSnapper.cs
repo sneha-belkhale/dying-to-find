@@ -7,7 +7,6 @@ public class HelmetSnapper: MonoBehaviour {
     Rigidbody rb;
     [SerializeField] public Transform snapTarget;
     [SerializeField] Transform targetRoot;
-    int handIndex = 0;
     bool snapped = false;
     public void Start()
     {
@@ -19,9 +18,10 @@ public class HelmetSnapper: MonoBehaviour {
         if(Vector3.SqrMagnitude(transform.position - snapTarget.position) < 0.5f && !snapped)
         {
             rb.isKinematic = true;
+            snapped = true;
             transform.position = snapTarget.position;
             StartCoroutine(SuckUp());
-            snapped = true;
+            UnderWorldLevelCode.instance.NumPlatformsCompleted ++;
         }
     }
     IEnumerator SuckUp()
@@ -46,8 +46,6 @@ public class HelmetSnapper: MonoBehaviour {
         targetRoot.gameObject.SetActive(false);
 
         ShaderEnvProps.instance.RecordGlobalPulse(snapTarget.position);
-
-
         yield return 0;
     }
 }

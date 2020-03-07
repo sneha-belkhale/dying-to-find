@@ -10,7 +10,7 @@ public class CCPlayer : MonoBehaviour
   public CCHand rightHand;
   public Transform head;
 
-  public bool antiGravity = false;
+  public bool useGravity = false;
 
   public float globalScaleVal = 0;
   Vector3 pAcc;
@@ -29,7 +29,7 @@ public class CCPlayer : MonoBehaviour
     ResetAcceleration();
   }
   public void ResetAcceleration() {
-      if (antiGravity) {
+      if (useGravity) {
         pVelo = Vector3.down - 80f * (leftHand.forwardMomentumVec + rightHand.forwardMomentumVec);
         pAcc = Vector3.up * -9.8f;
       }
@@ -44,7 +44,7 @@ public class CCPlayer : MonoBehaviour
     // Movement
     if (isGrabbing) {
       moving = false;
-    } else if (antiGravity) {
+    } else if (useGravity) {
         if(!moving) {
             ResetAcceleration();
             moving = true;

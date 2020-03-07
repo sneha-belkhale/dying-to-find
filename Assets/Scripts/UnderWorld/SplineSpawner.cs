@@ -47,10 +47,14 @@ public class SplineSpawner : MonoBehaviour
     }
 
     private int curChunkPos = 1;
-    private int lastChunkPos = 1;
+    public int lastChunkPos = 1;
     public Transform sphere;
     public float w;
     public void Update() {
+        // stop spawning new spline env if level is completed 
+        if(UnderWorldLevelCode.instance.LevelCompleted) return;
+
+        // calculate the current spline chunk index and activate if needed
         curChunkPos = Mathf.RoundToInt((CCPlayer.main.transform.position.y+30f) / -152f);
         if(curChunkPos < 2) return;
         if(lastChunkPos == curChunkPos) return;

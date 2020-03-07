@@ -670,7 +670,7 @@ MonoBehaviour:
   leftHand: {fileID: 758119471}
   rightHand: {fileID: 976782139}
   head: {fileID: 1585908236}
-  antiGravity: 0
+  useGravity: 0
   globalScaleVal: 0
 --- !u!114 &1470108851
 MonoBehaviour:

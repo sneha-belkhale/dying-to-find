@@ -91,7 +91,7 @@ public class CCHand : MonoBehaviour
         AddToList(lastHandDif);
         if(!(grabbedAgent is StationaryGrabbableObject)){
             CCPlayer.main.transform.position =
-            CCPlayer.main.antiGravity ?
+            CCPlayer.main.useGravity ?
                 CCPlayer.main.transform.position - lastHandDif:
                 CCPlayer.main.transform.position - lastHandDif.withY(0);
         };
@@ -108,7 +108,7 @@ public class CCHand : MonoBehaviour
     public Vector3 forwardMomentumVec = Vector3.zero;
     IEnumerator forwardMomentum () {
         forwardMomentumVec = getAverageHandDif();
-        forwardMomentumVec = CCPlayer.main.antiGravity ? forwardMomentumVec : forwardMomentumVec.withY(0);
+        forwardMomentumVec = CCPlayer.main.useGravity ? forwardMomentumVec : forwardMomentumVec.withY(0);
         while(forwardMomentumVec.sqrMagnitude > 0.001f){
             forwardMomentumVec = (1f - 1.5f * Time.deltaTime) * forwardMomentumVec;
             CCPlayer.main.transform.position -= forwardMomentumVec;
