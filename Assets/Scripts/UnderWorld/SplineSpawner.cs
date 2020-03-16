@@ -98,6 +98,31 @@ public class SplineSpawner : MonoBehaviour
             splineChunks[j].SetActive(true);
         }
     }
+
+    public void RemoveSplinesFromPos(float height, float dist)
+    {
+        bool criticalPointFound = false;
+        for (int i = Mathf.Max(curChunkPos-1, 0); i <= curChunkPos+1 ; i++)
+        {
+            if(criticalPointFound)
+            {
+                splineChunks[i].SetActive(false);
+                continue;
+            }
+            SplineLine[] splineLines = splineChunks[i].GetComponentsInChildren<SplineLine>();
+            for (int j = 0; j < splineLines.Length; j++)
+            {
+                if(!criticalPointFound && splineLines[j].transform.position.y < height - dist) 
+                {
+                    criticalPointFound = true;
+                }
+                if(criticalPointFound)
+                {
+                    splineLines[j].gameObject.SetActive(false);
+                }
+            }
+        }
+    }
 }
 
 #if UNITY_EDITOR

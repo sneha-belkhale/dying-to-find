@@ -11,6 +11,7 @@ public class UnderWorldLevelCode : MonoBehaviour
     [SerializeField] Transform finalRope;
     [SerializeField] Transform finalRopeEnd;
     [SerializeField] Transform finalPlane;
+    [SerializeField] SoundArea ambientSoundArea;
     public bool LevelCompleted = false;
     float finalLandingY;
     private int _numPlatformsCompleted = 0;
@@ -20,14 +21,15 @@ public class UnderWorldLevelCode : MonoBehaviour
         }
         set {
             _numPlatformsCompleted = value;
-            if(_numPlatformsCompleted > 0 && !LevelCompleted)
+            if(_numPlatformsCompleted > 2 && !LevelCompleted)
             {
                 LevelCompleted = true;
+                splineSpawner.RemoveSplinesFromPos(CCPlayer.main.transform.position.y, 35f);
                 // set the final landing position;
-                finalLandingY = -152f * (splineSpawner.lastChunkPos + 2) - 30f;
+                finalLandingY = CCPlayer.main.transform.position.y - 95f;
                 // drop a plane
                 finalPlane.gameObject.SetActive(true);
-                finalPlane.position = new Vector3(CCPlayer.main.transform.position.x, finalLandingY, CCPlayer.main.transform.position.z);
+                ambientSoundArea.StartFadeOut();
             }
         }
     }
@@ -66,27 +68,44 @@ public class UnderWorldLevelCode : MonoBehaviour
 
     void Update()
     {
+        if(Input.GetKeyDown("c") || OVRInput.Get(OVRInput.Button.One, OVRInput.Controller.LTouch)) {
+            NumPlatformsCompleted ++;
+        }
         if(!LevelCompleted) return;
 
         // wait until player has reached the end of the last spline env
-        if(CCPlayer.main.transform.position.y < finalLandingY && dropPlayerRope == null){
+        if(CCPlayer.main.transform.position.y < (finalLandingY + 1.5f) && dropPlayerRope == null){
             // player's env should now be empty
             // stop player from falling and drop a platform 
-            CCPlayer.main.useGravity = false;
-            dropPlayerRope = StartCoroutine(DropPlayerRope());
+            dropPlayerRope = StartCoroutine(EndScene());
+        } else if (dropPlayerRope == null) {
+            // make sure plane is always under character
+            finalPlane.position = new Vector3(CCPlayer.main.transform.position.x, finalLandingY, CCPlayer.main.transform.position.z);
         }
     }
 
-    IEnumerator DropPlayerRope()
+    IEnumerator EndScene()
     {
+        CCPlayer.main.useGravity = false;
+        yield return new WaitForSeconds(3f);
+
         finalRope.gameObject.SetActive(true);
-        yield return this.xuTween((t) => {
-            finalRope.position = new Vector3(CCPlayer.main.transform.position.x + 1f,CCPlayer.main.head.position.y + 5f * (1f - t),CCPlayer.main.transform.position.z);
-        }, 2f);
-        while(Vector3.SqrMagnitude(finalRopeEnd.position - CCPlayer.main.head.position) > 0.5f)
+        Vector3 ropeEndPos = CCPlayer.main.transform.position + 2.5f * CCPlayer.main.head.forward.withY(0);
+        finalRope.position = ropeEndPos.withY(CCPlayer.main.head.position.y - 0.5f);
+        yield return new WaitForSeconds(7f);    
+
+        // wait until they grabbed the object atleast once
+        StationaryGrabbableObject g = finalRopeEnd.GetComponent<StationaryGrabbableObject>();
+        while(g.grabber[0] ==null && g.grabber[1] == null)
+        {
+            yield return 0f;
+        }
+
+        while(Vector3.SqrMagnitude(finalRopeEnd.position - CCPlayer.main.head.position) > 0.25f)
         {
             yield return 0;
         }
+        
         //TODO symbolize that player is glitching out somehow.
         CCSceneUtils.instance.StartCoroutine(CCSceneUtils.DoFadeSceneLoadCoroutine("RopeScene", "UnderWorldScene"));
     }

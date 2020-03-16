@@ -22,9 +22,18 @@ public class SoundArea : MonoBehaviour
         audio = gameObject.GetComponent<AudioSource>();
     }
 
+    public void StartFadeOut()
+    {
+        if (fadeInCoroutine != null)
+        {
+            StopCoroutine(fadeInCoroutine);
+        }
+        fadeOutCoroutine = StartCoroutine(this.FadeOut());
+    }
+
     private IEnumerator FadeIn()
     {
-        audio.Play();
+        audio.Play();   
         audio.volume = 0f;
 
         while (audio.volume < targetVolume)
@@ -57,10 +66,6 @@ public class SoundArea : MonoBehaviour
     private void OnTriggerExit()
     {
         if(!shouldFadeOut) return;
-        if (fadeInCoroutine != null)
-        {
-            StopCoroutine(fadeInCoroutine);
-        }
-        fadeOutCoroutine = StartCoroutine(this.FadeOut());
+        StartFadeOut();
     }
 }
