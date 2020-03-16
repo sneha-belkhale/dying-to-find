@@ -36,8 +36,8 @@ public class SplineSpawner : MonoBehaviour
         //every 8 lines, we add a platform, 
         if (count%5 == 4 && rz > 2f) {
             Vector3 endPos = sl.attachPos;
-            Quaternion lookRot = Quaternion.LookRotation(endPos.withY(0).normalized);
-            endPos = endPos.withY(endPos.y - 3.3f);
+            Quaternion lookRot = Quaternion.LookRotation(endPos.withY(0).withX(endPos.x + Random.Range(-5,5f)).normalized);
+            endPos = endPos.withY(endPos.y - 3.6f);
             GameObject pl = Instantiate(platform, endPos, lookRot, sl.gameObject.transform);
             pl.SetActive(true);
         }

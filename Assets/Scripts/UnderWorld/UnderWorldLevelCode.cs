@@ -20,7 +20,7 @@ public class UnderWorldLevelCode : MonoBehaviour
         }
         set {
             _numPlatformsCompleted = value;
-            if(_numPlatformsCompleted > 3 && !LevelCompleted)
+            if(_numPlatformsCompleted > 0 && !LevelCompleted)
             {
                 LevelCompleted = true;
                 // set the final landing position;
@@ -31,6 +31,14 @@ public class UnderWorldLevelCode : MonoBehaviour
             }
         }
     }
+
+    //AUDIO static references
+    [SerializeField] public AudioSource SuckInSound;
+    [SerializeField] public AudioSource IdleVoxelSound;
+    [SerializeField] public AudioSource GrabSound;
+    [SerializeField] public AudioSource PulseSound;
+
+
     private void Awake()
     {
         if (instance == null) 

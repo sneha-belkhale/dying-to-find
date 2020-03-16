@@ -83,7 +83,9 @@ public class CCHand : MonoBehaviour
         grabbedAgent.onReleaseBase();
         grabbedAgent.grabber[(int)hand] = null;
         //push you forward a bit in the last direction
-        StartCoroutine(forwardMomentum());
+        if(!(grabbedAgent is StationaryGrabbableObject)){
+            StartCoroutine(forwardMomentum());
+        }
     }
 
     void HandleGrabHold() {
@@ -119,7 +121,7 @@ public class CCHand : MonoBehaviour
         yield return 0;
     }
 
-    Vector3 getAverageHandDif() {
+    public Vector3 getAverageHandDif() {
         Vector3 average = Vector3.zero;
         if(lastHandDifs.Count == 0) return average;
 

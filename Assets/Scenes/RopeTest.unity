@@ -608,7 +608,6 @@ GameObject:
   - component: {fileID: 952159074}
   - component: {fileID: 952159073}
   - component: {fileID: 952159075}
-  - component: {fileID: 952159076}
   m_Layer: 0
   m_Name: Cube (3)
   m_TagString: Untagged
@@ -757,19 +756,6 @@ MonoBehaviour:
   - {fileID: 0}
   grabPoint: {x: 0, y: 0, z: 0}
   mat: {fileID: 0}
---- !u!114 &952159076
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 952159068}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6e5893463b53d498eba8828443808af2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  snapTarget: {fileID: 766231922}
 --- !u!1 &1082763697
 GameObject:
   m_ObjectHideFlags: 0

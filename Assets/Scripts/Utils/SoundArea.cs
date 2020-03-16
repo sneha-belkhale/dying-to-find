@@ -10,6 +10,8 @@ public class SoundArea : MonoBehaviour
     private float fadeOutDuration = 10.0f;
     [SerializeField]
     private float targetVolume = 1.0f;
+    [SerializeField]
+    public bool shouldFadeOut = true;
 
     new private AudioSource audio;
     private Coroutine fadeInCoroutine;
@@ -54,6 +56,7 @@ public class SoundArea : MonoBehaviour
 
     private void OnTriggerExit()
     {
+        if(!shouldFadeOut) return;
         if (fadeInCoroutine != null)
         {
             StopCoroutine(fadeInCoroutine);
