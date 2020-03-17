@@ -11,6 +11,7 @@ public class UnderWorldLevelCode : MonoBehaviour
     [SerializeField] Transform finalRope;
     [SerializeField] Transform finalRopeEnd;
     [SerializeField] Transform finalPlane;
+    [SerializeField] Transform finalVoxel;
     [SerializeField] SoundArea ambientSoundArea;
     public bool LevelCompleted = false;
     float finalLandingY;
@@ -90,7 +91,7 @@ public class UnderWorldLevelCode : MonoBehaviour
         yield return new WaitForSeconds(3f);
 
         finalRope.gameObject.SetActive(true);
-        Vector3 ropeEndPos = CCPlayer.main.transform.position + 2.5f * CCPlayer.main.head.forward.withY(0);
+        Vector3 ropeEndPos = CCPlayer.main.head.transform.position + 2.5f * CCPlayer.main.head.forward.withY(0);
         finalRope.position = ropeEndPos.withY(CCPlayer.main.head.position.y - 0.5f);
         yield return new WaitForSeconds(7f);    
 
@@ -100,11 +101,16 @@ public class UnderWorldLevelCode : MonoBehaviour
         {
             yield return 0f;
         }
-
         while(Vector3.SqrMagnitude(finalRopeEnd.position - CCPlayer.main.head.position) > 0.25f)
         {
             yield return 0;
         }
+        
+        Vector3 startingVoxelPos = CCPlayer.main.head.position.withY(CCPlayer.main.head.position.y - 1f);
+        finalVoxel.gameObject.SetActive(true);
+        yield return this.xuTween((float t) => {
+            finalVoxel.transform.position = startingVoxelPos.withY(startingVoxelPos.y + t * 2f) + 0.3f * Vector3.right * Mathf.Sin(4f * Time.fixedTime);
+        }, 3f);
         
         //TODO symbolize that player is glitching out somehow.
         CCSceneUtils.instance.StartCoroutine(CCSceneUtils.DoFadeSceneLoadCoroutine("RopeScene", "UnderWorldScene"));
