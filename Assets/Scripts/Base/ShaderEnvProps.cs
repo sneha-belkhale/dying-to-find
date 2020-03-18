@@ -9,11 +9,11 @@ public class ShaderEnvProps : MonoBehaviour
 
     private void Awake()
     {
-        if (instance == null) 
+        if (instance == null)
         {
             instance = this;
         }
-        else 
+        else
         {
             Destroy(instance);
             instance = this;
@@ -24,15 +24,20 @@ public class ShaderEnvProps : MonoBehaviour
     private void Update()
     {
         float globalPulseTimeElapsed = Mathf.Abs(lastGlobalPulse - Time.fixedTime);
-        globalPulseTimeElapsed = (globalPulseTimeElapsed > .99f)? -10f : globalPulseTimeElapsed;
+        globalPulseTimeElapsed = (globalPulseTimeElapsed > .99f) ? -10f : globalPulseTimeElapsed;
         Shader.SetGlobalFloat("_GlobalPulseTimeElapsed", globalPulseTimeElapsed);
     }
 
-    public void RecordGlobalPulse(Vector3 pos)
+    public void RecordGlobalPulse(Vector3 pos, bool playSound = true)
     {
         if(Time.fixedTime - lastGlobalPulse < 0.2f) return;
         Shader.SetGlobalVector("_GlobalPulseOrigin", pos);
+        
         lastGlobalPulse = Time.fixedTime;
+        if (playSound)
+        {
+            UnderWorldLevelCode.instance.PulseSound.Play();
+        }
     }
 
 }

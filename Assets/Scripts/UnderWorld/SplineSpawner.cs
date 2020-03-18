@@ -36,8 +36,8 @@ public class SplineSpawner : MonoBehaviour
         //every 8 lines, we add a platform, 
         if (count%5 == 4 && rz > 2f) {
             Vector3 endPos = sl.attachPos;
-            Quaternion lookRot = Quaternion.LookRotation(endPos.withY(0).normalized);
-            endPos = endPos.withY(endPos.y - 3.3f);
+            Quaternion lookRot = Quaternion.LookRotation(endPos.withY(0).withX(endPos.x + Random.Range(-5,5f)).normalized);
+            endPos = endPos.withY(endPos.y - 3.6f);
             GameObject pl = Instantiate(platform, endPos, lookRot, sl.gameObject.transform);
             pl.SetActive(true);
         }
@@ -47,10 +47,14 @@ public class SplineSpawner : MonoBehaviour
     }
 
     private int curChunkPos = 1;
-    private int lastChunkPos = 1;
+    public int lastChunkPos = 1;
     public Transform sphere;
     public float w;
     public void Update() {
+        // stop spawning new spline env if level is completed 
+        if(UnderWorldLevelCode.instance.LevelCompleted) return;
+
+        // calculate the current spline chunk index and activate if needed
         curChunkPos = Mathf.RoundToInt((CCPlayer.main.transform.position.y+30f) / -152f);
         if(curChunkPos < 2) return;
         if(lastChunkPos == curChunkPos) return;
@@ -92,6 +96,31 @@ public class SplineSpawner : MonoBehaviour
         }
         for(int j = 0; j < 3; j++){
             splineChunks[j].SetActive(true);
+        }
+    }
+
+    public void RemoveSplinesFromPos(float height, float dist)
+    {
+        bool criticalPointFound = false;
+        for (int i = Mathf.Max(curChunkPos-1, 0); i <= curChunkPos+1 ; i++)
+        {
+            if(criticalPointFound)
+            {
+                splineChunks[i].SetActive(false);
+                continue;
+            }
+            SplineLine[] splineLines = splineChunks[i].GetComponentsInChildren<SplineLine>();
+            for (int j = 0; j < splineLines.Length; j++)
+            {
+                if(!criticalPointFound && splineLines[j].transform.position.y < height - dist) 
+                {
+                    criticalPointFound = true;
+                }
+                if(criticalPointFound)
+                {
+                    splineLines[j].gameObject.SetActive(false);
+                }
+            }
         }
     }
 }

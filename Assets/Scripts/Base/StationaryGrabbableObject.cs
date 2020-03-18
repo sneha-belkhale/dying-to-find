@@ -33,6 +33,7 @@ public class StationaryGrabbableObject : GrabbableObject {
     public override void onRelease()
     {
         rb.isKinematic = false;
+        rb.AddForce(50f * grabber[handIndex].getAverageHandDif(), ForceMode.Impulse);
     }
     public Vector3 RotatePointAroundPivot(Vector3 point, Vector3 pivot, Quaternion rotation)
     {

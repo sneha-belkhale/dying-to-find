@@ -83,7 +83,9 @@ public class CCHand : MonoBehaviour
         grabbedAgent.onReleaseBase();
         grabbedAgent.grabber[(int)hand] = null;
         //push you forward a bit in the last direction
-        StartCoroutine(forwardMomentum());
+        if(!(grabbedAgent is StationaryGrabbableObject)){
+            StartCoroutine(forwardMomentum());
+        }
     }
 
     void HandleGrabHold() {
@@ -91,7 +93,7 @@ public class CCHand : MonoBehaviour
         AddToList(lastHandDif);
         if(!(grabbedAgent is StationaryGrabbableObject)){
             CCPlayer.main.transform.position =
-            CCPlayer.main.antiGravity ?
+            CCPlayer.main.useGravity ?
                 CCPlayer.main.transform.position - lastHandDif:
                 CCPlayer.main.transform.position - lastHandDif.withY(0);
         };
@@ -108,7 +110,7 @@ public class CCHand : MonoBehaviour
     public Vector3 forwardMomentumVec = Vector3.zero;
     IEnumerator forwardMomentum () {
         forwardMomentumVec = getAverageHandDif();
-        forwardMomentumVec = CCPlayer.main.antiGravity ? forwardMomentumVec : forwardMomentumVec.withY(0);
+        forwardMomentumVec = CCPlayer.main.useGravity ? forwardMomentumVec : forwardMomentumVec.withY(0);
         while(forwardMomentumVec.sqrMagnitude > 0.001f){
             forwardMomentumVec = (1f - 1.5f * Time.deltaTime) * forwardMomentumVec;
             CCPlayer.main.transform.position -= forwardMomentumVec;
@@ -119,7 +121,7 @@ public class CCHand : MonoBehaviour
         yield return 0;
     }
 
-    Vector3 getAverageHandDif() {
+    public Vector3 getAverageHandDif() {
         Vector3 average = Vector3.zero;
         if(lastHandDifs.Count == 0) return average;
 

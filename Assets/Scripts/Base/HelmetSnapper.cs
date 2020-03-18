@@ -7,7 +7,6 @@ public class HelmetSnapper: MonoBehaviour {
     Rigidbody rb;
     [SerializeField] public Transform snapTarget;
     [SerializeField] Transform targetRoot;
-    int handIndex = 0;
     bool snapped = false;
     public void Start()
     {
@@ -19,17 +18,19 @@ public class HelmetSnapper: MonoBehaviour {
         if(Vector3.SqrMagnitude(transform.position - snapTarget.position) < 0.5f && !snapped)
         {
             rb.isKinematic = true;
+            snapped = true;
             transform.position = snapTarget.position;
             StartCoroutine(SuckUp());
-            snapped = true;
+            UnderWorldLevelCode.instance.NumPlatformsCompleted ++;
         }
     }
     IEnumerator SuckUp()
     {
+        UnderWorldLevelCode.instance.SuckInSound.Play();
         // scale down the character while maintaining head position, send three pulses out
         float initialHeight = snapTarget.position.y - targetRoot.position.y;
         Vector3 initialScale = targetRoot.localScale;
-        ShaderEnvProps.instance.RecordGlobalPulse(snapTarget.position);
+        ShaderEnvProps.instance.RecordGlobalPulse(snapTarget.position, false);
         this.xuTween((float t) => {
             float scaledHeight = t * initialHeight;
             targetRoot.localScale = initialScale.withY((1f - t) * initialScale.y);
@@ -37,17 +38,15 @@ public class HelmetSnapper: MonoBehaviour {
         }, 1.3f);
 
         yield return new WaitForSeconds(0.4f);
-        ShaderEnvProps.instance.RecordGlobalPulse(snapTarget.position);
+        ShaderEnvProps.instance.RecordGlobalPulse(snapTarget.position, false);
         yield return new WaitForSeconds(0.6f);
-        ShaderEnvProps.instance.RecordGlobalPulse(snapTarget.position);
+        ShaderEnvProps.instance.RecordGlobalPulse(snapTarget.position, false);
         yield return new WaitForSeconds(0.3f);
         
         rb.isKinematic = false;
         targetRoot.gameObject.SetActive(false);
 
-        ShaderEnvProps.instance.RecordGlobalPulse(snapTarget.position);
-
-
+        ShaderEnvProps.instance.RecordGlobalPulse(snapTarget.position, false);
         yield return 0;
     }
 }
