@@ -15,6 +15,6 @@ EditorBuildSettings:
     path: Assets/Scenes/UnderWorldScene.unity
     guid: f8afd1101a31e494f849274bea73050d
   - enabled: 0
-    path: Assets/Scenes/RopeTest.unity
+    path: Assets/Scenes/Tests/RopeTest.unity
     guid: 43df368f2c61e4d0f8d8e5db27a10422
   m_configObjects: {}
