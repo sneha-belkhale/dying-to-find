@@ -6,6 +6,7 @@ public class SplineSpawner : MonoBehaviour
 {
     public GameObject ss;
     public GameObject platform;
+    public GameObject particles;
     
     [Header("SPAWN PARAMS")]
     [SerializeField] float SpacingCoef = 6;
@@ -88,6 +89,10 @@ public class SplineSpawner : MonoBehaviour
             // Instantiate
             GameObject splineChunkParent = new GameObject("SplineChunk");
             splineChunkParent.transform.SetParent(transform);
+
+            GameObject particleGo = Instantiate(particles, lastPosition, Quaternion.identity, splineChunkParent.transform);
+            particleGo.SetActive(true);
+
             for(int k = 0; k < 30; k++){
                 AddObject(splineChunkParent.transform);
             }
