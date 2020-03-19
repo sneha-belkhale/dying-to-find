@@ -586,7 +586,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   instantiatedObjectRoot: {fileID: 506135297}
-  startScene: UnderWorldScene
+  startScene: CrowdScene
 --- !u!4 &1279036145
 Transform:
   m_ObjectHideFlags: 0

@@ -61,7 +61,6 @@ public class MorpheusController : MonoBehaviour
     {
         Vector3 pp = CCPlayer.main.transform.position;
         bool isInReach = Vector3.Distance(pp, transform.position) < 4f;
-
         // Activate THE HOLE!
         // TODO (Kirill): This need to be triggered on hand shake
         if (isInReach && !transitionComplete)
@@ -138,6 +137,7 @@ public class MorpheusController : MonoBehaviour
         }, 7f);
 
         portalOfAnswerMat.gameObject.SetActive(false);
+        Time.timeScale = 1f;
         CCSceneUtils.instance.StartCoroutine(CCSceneUtils.DoFadeSceneLoadCoroutine("UnderWorldScene", "CrowdScene"));
 
         yield return 0;
