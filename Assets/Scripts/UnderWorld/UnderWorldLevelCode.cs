@@ -40,6 +40,10 @@ public class UnderWorldLevelCode : MonoBehaviour
     [SerializeField] public AudioSource IdleVoxelSound;
     [SerializeField] public AudioSource GrabSound;
     [SerializeField] public AudioSource PulseSound;
+    [SerializeField] public AudioSource FlatlineBeep;
+    [SerializeField] public AudioSource RopeDrop;
+    [SerializeField] public AudioSource Wind;
+    [SerializeField] public AudioSource Landing;
 
 
     private void Awake()
@@ -87,12 +91,23 @@ public class UnderWorldLevelCode : MonoBehaviour
 
     IEnumerator EndScene()
     {
+        Landing.Play();
         CCPlayer.main.useGravity = false;
+        //fade in the beep sound
+        FlatlineBeep.Play();
+        float startingWindVol = Wind.volume;
+        this.xuTween((float t ) => {
+            FlatlineBeep.volume = 0.5f * t;
+            Wind.volume = Mathf.Lerp(startingWindVol, 0, t);
+        }, 4f);
         yield return new WaitForSeconds(3f);
 
         finalRope.gameObject.SetActive(true);
-        Vector3 ropeEndPos = CCPlayer.main.head.transform.position + 2.5f * CCPlayer.main.head.forward.withY(0);
-        finalRope.position = ropeEndPos.withY(CCPlayer.main.head.position.y - 0.5f);
+        Vector3 ropeEndPos = CCPlayer.main.head.transform.position + 2f * CCPlayer.main.head.forward.withY(0);
+        finalRope.position = ropeEndPos.withY(CCPlayer.main.head.position.y - 0.75f);
+        finalRope.rotation = Quaternion.LookRotation(CCPlayer.main.head.transform.forward.withY(0).normalized);
+        RopeDrop.Play();
+
         yield return new WaitForSeconds(7f);    
 
         // wait until they grabbed the object atleast once
@@ -105,14 +120,31 @@ public class UnderWorldLevelCode : MonoBehaviour
         {
             yield return 0;
         }
-        
+
         Vector3 startingVoxelPos = CCPlayer.main.head.position.withY(CCPlayer.main.head.position.y - 1f);
         finalVoxel.gameObject.SetActive(true);
-        yield return this.xuTween((float t) => {
-            finalVoxel.transform.position = startingVoxelPos.withY(startingVoxelPos.y + t * 2f) + 0.3f * Vector3.right * Mathf.Sin(4f * Time.fixedTime);
-        }, 3f);
+        ShaderEnvProps.instance.RecordGlobalPulse(CCPlayer.main.head.position);
+
+        SuckInSound.pitch = 0.33f;
+        SuckInSound.Play();
+        this.xuTween((float t) => {
+            float cubicT = Easing.Cubic.In(t); 
+            finalVoxel.transform.position = startingVoxelPos.withY(startingVoxelPos.y + cubicT * 2f) + 0.3f * Vector3.right * Mathf.Sin(4f * Time.fixedTime);
+        }, 4f);
+        yield return new WaitForSeconds(0.3f);        
+
+        ShaderEnvProps.instance.RecordGlobalPulse(CCPlayer.main.head.position);
         
-        //TODO symbolize that player is glitching out somehow.
-        CCSceneUtils.instance.StartCoroutine(CCSceneUtils.DoFadeSceneLoadCoroutine("RopeScene", "UnderWorldScene"));
+        yield return new WaitForSeconds(0.8f);
+        ShaderEnvProps.instance.RecordGlobalPulse(CCPlayer.main.head.position);
+        yield return new WaitForSeconds(1.9f);
+
+        this.xuTween((float t) => {
+            float quinticT = Easing.Quintic.In(t);
+            RenderSettings.fogColor = quinticT * Color.white;
+            RenderSettings.fogDensity = 0.003f + quinticT;
+        }, 1f);        
+        yield return new WaitForSeconds(1f);
+        CCSceneUtils.instance.StartCoroutine(CCSceneUtils.DoFadeSceneLoadCoroutine("RopeTest", "UnderWorldScene"));
     }
 }

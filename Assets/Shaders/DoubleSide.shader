@@ -68,7 +68,7 @@ Shader "Unlit/DoubleSide"
 
             fixed4 frag (v2f i) : SV_Target
             {
-                fixed4 col = i.color;
+                fixed4 col = i.color + tex2D(_MainTex, i.uv);
                 // apply fog
                 UNITY_APPLY_FOG(i.fogCoord, col);
                 return col;

@@ -8,9 +8,9 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: UnderWorldGround
-  m_Shader: {fileID: 10752, guid: 0000000000000000f000000000000000, type: 0}
-  m_ShaderKeywords: 
-  m_LightmapFlags: 4
+  m_Shader: {fileID: 4800000, guid: b781ce68e0e4f47239a5fee95be5cfc7, type: 3}
+  m_ShaderKeywords: _EMISSION _GLOSSYREFLECTIONS_OFF _SPECULARHIGHLIGHTS_OFF
+  m_LightmapFlags: 1
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
@@ -57,7 +57,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _BumpScale: 1
-    - _Cull: 1
+    - _Cull: 2
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
@@ -65,7 +65,7 @@ Material:
     - _FadeOutVal: 0
     - _GlossMapScale: 1
     - _Glossiness: 0.5
-    - _GlossyReflections: 1
+    - _GlossyReflections: 0
     - _IgnoreGlobalStretch: 0
     - _IgnoreGlobalStretchFrag: 0
     - _Leveling: 0
@@ -75,13 +75,14 @@ Material:
     - _Offset: 0
     - _Parallax: 0.02
     - _SmoothnessTextureChannel: 0
-    - _SpecularHighlights: 1
+    - _SpecularHighlights: 0
     - _SrcBlend: 1
     - _UVSec: 0
     - _UsePointColor: 0
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 0.4516287, g: 0.46067443, b: 0.4811321, a: 1}
+    - _Color: {r: 0, g: 0, b: 0, a: 1}
+    - _ColorBackside: {r: 0, g: 0, b: 0, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _VertOutVal: {r: 0, g: 0, b: 0, a: 1}
     - _WarpCenter: {r: 0, g: 0, b: 0, a: 0}

@@ -3,6 +3,7 @@ Shader "Custom/MinimalInstancedShader"
 {
     Properties
     {
+        _BaseColor ("Color", Color) = (0.3,0.3,0.3,0.3)
     }
 
     SubShader
@@ -42,6 +43,7 @@ Shader "Custom/MinimalInstancedShader"
             float4 _GlobalPulseColor;
             float4 _GlobalPulseOrigin;
             float _GlobalPulseTimeElapsed;
+            float4 _BaseColor;
 
             v2f vert(appdata v)
             {
@@ -58,7 +60,7 @@ Shader "Custom/MinimalInstancedShader"
             fixed4 frag(v2f i) : SV_Target
             {
                 UNITY_SETUP_INSTANCE_ID(i);
-                float4 col = 0.3 * float4(1,1,1,1);
+                float4 col = _BaseColor;
 
                 float isCorner = max(
                     step(min(i.uv.x, 1-i.uv.x),0.1),
