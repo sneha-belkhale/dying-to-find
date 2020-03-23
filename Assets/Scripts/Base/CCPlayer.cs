@@ -34,12 +34,17 @@ public class CCPlayer : MonoBehaviour
         pAcc = Vector3.up * -9.8f;
       }
   }
+  public void SetActiveHandType(HandType type)
+  {
+    leftHand.SetActiveHandType(type);
+    rightHand.SetActiveHandType(type);
+  }
   private void Update()
   {
     //debugging
     Vector3 finalMove = Vector3.zero;
-    finalMove.y += leftHand.grabInput.joystickInput.y;
-    finalMove.y += rightHand.grabInput.joystickInput.y;
+    finalMove.y += leftHand.handInput.joystickInput.y;
+    finalMove.y += rightHand.handInput.joystickInput.y;
 
     // Movement
     if (isGrabbing) {

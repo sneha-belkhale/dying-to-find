@@ -2,17 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum GrabState {
-Down,
-Holding,
-Released,
+public enum InputState {
+    Down,
+    Holding,
+    Released,
+    Up,
 }
 
 public class CCInput : MonoBehaviour
 {
 public string hand;
 private OVRInput.Controller ovrHand;
-public GrabState GrabState;
+public InputState grabState;
+public InputState triggerState;
 public Vector2 joystickInput;
     void Start(){
         if(hand == "left"){
@@ -20,6 +22,8 @@ public Vector2 joystickInput;
         } else {
             ovrHand = OVRInput.Controller.RTouch;
         }
+        triggerState = InputState.Up;
+        grabState = InputState.Up;
     }
 
     public void TriggerHaptics() {
@@ -34,28 +38,41 @@ public Vector2 joystickInput;
        yield return 0;
     }
     void Update(){
-        switch (GrabState) {
-            case GrabState.Down: {
-                if(OVRInput.Get(OVRInput.Button.PrimaryHandTrigger, ovrHand)){
-                    GrabState = GrabState.Holding;
+        HandleOVRStateForButton(OVRInput.Button.PrimaryIndexTrigger, ref triggerState);
+        HandleOVRStateForButton(OVRInput.Button.PrimaryHandTrigger, ref grabState);
+        // handle joystick movement
+        joystickInput = OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick, ovrHand);
+    }
+
+    void HandleOVRStateForButton(OVRInput.Button button, ref InputState state)
+    {
+        switch (state) {
+            case InputState.Down: {
+                if(OVRInput.Get(button, ovrHand)){
+                    state = InputState.Holding;
                 }
                 break;
             }
-            case GrabState.Holding: {
-                if(!OVRInput.Get(OVRInput.Button.PrimaryHandTrigger, ovrHand)){
-                    GrabState = GrabState.Released;
+            case InputState.Holding: {
+                if(!OVRInput.Get(button, ovrHand)){
+                    state = InputState.Released;
                 }
                 break;
             }
-            case GrabState.Released: {
-                if(OVRInput.GetDown(OVRInput.Button.PrimaryHandTrigger, ovrHand)){
-                    GrabState = GrabState.Down;
+            case InputState.Released: {
+                if(OVRInput.GetDown(button, ovrHand)){
+                    state = InputState.Down;
+                } else {
+                    state = InputState.Up;
+                }
+                break;
+            }
+            case InputState.Up: {
+                if(OVRInput.GetDown(button, ovrHand)){
+                    state = InputState.Down;
                 }
                 break;
             }
         }
-
-        // handle joystick movement
-        joystickInput = OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick, ovrHand);
     }
 }

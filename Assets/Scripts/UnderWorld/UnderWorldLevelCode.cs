@@ -62,6 +62,7 @@ public class UnderWorldLevelCode : MonoBehaviour
 
     void Start()
     {
+        CCPlayer.main.SetActiveHandType(HandType.Voxel);
         CCPlayer.main.Teleport(startingSpawn);
         CCPlayer.main.useGravity = true;
         CCPlayer.main.ResetAcceleration();
@@ -145,6 +146,6 @@ public class UnderWorldLevelCode : MonoBehaviour
             RenderSettings.fogDensity = 0.003f + quinticT;
         }, 1f);        
         yield return new WaitForSeconds(1f);
-        CCSceneUtils.instance.StartCoroutine(CCSceneUtils.DoFadeSceneLoadCoroutine("RopeTest", "UnderWorldScene"));
+        CCSceneUtils.instance.StartCoroutine(CCSceneUtils.DoFadeSceneLoadCoroutine("ShadowManipScene", "UnderWorldScene"));
     }
 }
