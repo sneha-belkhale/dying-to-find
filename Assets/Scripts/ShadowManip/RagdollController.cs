@@ -11,7 +11,6 @@ public class RagdollController : MonoBehaviour
     }
     bool isKinematic = true;
     [SerializeField] Animator animator;
-    [SerializeField] Transform lightPos;
 
     
     SavedTransform[] lastAnimatedTransforms;
@@ -23,6 +22,7 @@ public class RagdollController : MonoBehaviour
     void Start()
     {
         // initialize
+        lastTargetPoint = animator.gameObject.transform.position;
         rbs = GetComponentsInChildren<Rigidbody>();
         lastAnimatedTransforms = new SavedTransform[rbs.Length];
         lastRbTransforms = new SavedTransform[rbs.Length];
@@ -52,19 +52,19 @@ public class RagdollController : MonoBehaviour
         }
     }
     Rigidbody rbThatFollows;
-    Vector3 rbTargetPoint;
     CCHand activeHand;
     void Update()
     {
-        // temp  mouse raycaster
+
+        Vector3 lightPos = ShadowManipManager.instance.spotlight.position;
         RaycastHit hit;
-        bool leftHandDown = CCPlayer.main.leftHand.handInput.triggerState == InputState.Down;
         bool rightHandDown = CCPlayer.main.rightHand.handInput.triggerState == InputState.Down;
-        if((leftHandDown || rightHandDown)
+
+        if((rightHandDown)
          && animator.enabled)
         {
-            CCHand tActiveHand = leftHandDown ? CCPlayer.main.leftHand : CCPlayer.main.rightHand;
-            if (Physics.Raycast(lightPos.position, (tActiveHand.anchor.position - lightPos.position).normalized, out hit, 100, ragdollLayerMask)) {
+            CCHand tActiveHand = CCPlayer.main.rightHand;
+            if (Physics.Raycast(lightPos, (tActiveHand.anchor.position - lightPos).normalized, out hit, 100, ragdollLayerMask)) {
                 Debug.Log(hit.collider.name);
                 if(hit.collider.name.StartsWith("mixamorig")){
                     // make this collider kinematic
@@ -77,26 +77,36 @@ public class RagdollController : MonoBehaviour
         }
         if(activeHand && activeHand.handInput.triggerState == InputState.Released)
         {
-            activeHand = null;
+            rbThatFollows.isKinematic = false;
             rbThatFollows = null;
+            activeHand = null;
             StartCoroutine(TransitionToAnimator());
         }
 
         if(rbThatFollows != null)
         {
-            bool wasHit = Physics.Raycast(lightPos.position, (activeHand.anchor.position - lightPos.position).normalized, out hit, 100, shadowCastLayerMask);
+            bool wasHit = Physics.Raycast(lightPos, (activeHand.anchor.position - lightPos).normalized, out hit, 100, shadowCastLayerMask);
             if(wasHit && hit.collider.name.StartsWith("MouseIntersectionPlane"))
             {
-                rbTargetPoint = Vector3.Lerp(rbTargetPoint, hit.point, 3f * Time.deltaTime);
-                rbThatFollows.MovePosition(hit.point);
+
+                rbThatFollows.MovePosition(hit.point + 0.4f * hit.collider.transform.up);
             }
         }
     }
     // set kinematic first, then lerp bones. 
+    Vector3 lastTargetPoint = Vector3.zero;
     IEnumerator TransitionToAnimator()
     {
+        yield return new WaitForSeconds(2f);
+
         SetRagdollKinematic(true);
         SnapshotTransforms(lastRbTransforms);
+        
+        Vector3 rbTargetPoint = rbs[0].position.withY(0f);
+        Vector3 diff = (rbTargetPoint - lastTargetPoint).withY(0f); // xz plane only
+        lastTargetPoint = rbTargetPoint;
+        TranslateTransforms(lastAnimatedTransforms, diff);
+        animator.gameObject.transform.position += diff;
 
         yield return this.xuTween((float t) => {
             float easeT = Easing.Quintic.InOut(t);
@@ -108,6 +118,14 @@ public class RagdollController : MonoBehaviour
         }, 1f);
         animator.enabled = true;
         yield return 0f;
+    }
+
+    void TranslateTransforms(SavedTransform[] arr, Vector3 diff)
+    {
+        for (int i = 0; i < arr.Length; i++)
+        {
+            arr[i].position += diff;
+        }
     }
     //lerp out bones then set non kinematic
     public void TransitionToRagdoll()
