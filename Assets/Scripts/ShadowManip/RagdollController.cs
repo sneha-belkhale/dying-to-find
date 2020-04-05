@@ -89,7 +89,7 @@ public class RagdollController : MonoBehaviour
             if(wasHit && hit.collider.name.StartsWith("MouseIntersectionPlane"))
             {
 
-                rbThatFollows.MovePosition(hit.point + 0.4f * hit.collider.transform.up);
+                rbThatFollows.MovePosition(hit.point + 1.5f * hit.collider.transform.up);
             }
         }
     }
