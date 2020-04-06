@@ -12,6 +12,7 @@ public class RagdollController : MonoBehaviour
     bool isKinematic = true;
     [SerializeField] Animator animator;
     [SerializeField] BoxCollider ringTarget;
+    [SerializeField] SkinnedMeshRenderer renderer;
     SavedTransform[] lastAnimatedTransforms;
     SavedTransform[] lastRbTransforms;
     Rigidbody[] rbs;
@@ -117,6 +118,7 @@ public class RagdollController : MonoBehaviour
                 rbs[i].transform.position = Vector3.Lerp(lastRbTransforms[i].position, lastAnimatedTransforms[i].position, easeT);
                 rbs[i].transform.rotation = Quaternion.Lerp(lastRbTransforms[i].rotation, lastAnimatedTransforms[i].rotation, easeT);
             }
+            renderer.material.SetFloat("_FadeOutVal", 1f - easeT);
         }, 1f);
         animator.enabled = true;
         yield return 0f;
