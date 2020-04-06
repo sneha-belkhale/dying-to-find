@@ -11,15 +11,17 @@ public class ShadowManipManager : MonoBehaviour
 
     [SerializeField] GameObject levelingPlanePrefab;
     [SerializeField] GameObject conveyorRagdollPrefab;
+    [SerializeField] Transform ring;
+    [SerializeField] AnimationCurve ringAnimation;
     [SerializeField] int numPlanes = 30;
     [SerializeField] float bounds = 5;
     [SerializeField] float offset = 5;
-    [SerializeField] float radius = 8;
-    
+    [SerializeField] public float radius = 8;
+
     struct LevelingPlane
     {
         public Transform t;
-        public int dir; 
+        public int dir;
     }
     LevelingPlane[] levelingPlanes;
 
@@ -48,7 +50,7 @@ public class ShadowManipManager : MonoBehaviour
 
 
         SetupLevelingPlanes();
-        
+
         SetUpConveyor();
     }
 
@@ -60,10 +62,12 @@ public class ShadowManipManager : MonoBehaviour
         {
             Vector3 pos = levelingPlanes[i].t.position;
             pos.y += levelingPlanes[i].dir * Time.deltaTime;
-            if(pos.y < -bounds - offset) {
+            if (pos.y < -bounds - offset)
+            {
                 levelingPlanes[i].dir = 1;
             }
-            if(pos.y > bounds - offset) {
+            if (pos.y > bounds - offset)
+            {
                 levelingPlanes[i].dir = -1;
             }
             levelingPlanes[i].t.position = pos;
@@ -74,7 +78,7 @@ public class ShadowManipManager : MonoBehaviour
     void SetupLevelingPlanes()
     {
         levelingPlanes = new LevelingPlane[numPlanes];
-        for (int i = 0; i < numPlanes ; i++)
+        for (int i = 0; i < numPlanes; i++)
         {
             float degree = i * (360f / numPlanes);
             Quaternion rot = Quaternion.Euler(180f, degree, 90f);
@@ -90,18 +94,28 @@ public class ShadowManipManager : MonoBehaviour
     void SetUpConveyor()
     {
         conveyorRagdolls = new Transform[10];
-        for (int i = 0; i < 10 ; i++)
+        for (int i = 0; i < 10; i++)
         {
             float degree = i * (360f / numPlanes);
             Quaternion rot = Quaternion.Euler(180f, degree, 90f);
-            GameObject newConveryor = Instantiate(conveyorRagdollPrefab, Vector3.zero, rot, transform);
+            GameObject newConveryor = Instantiate(conveyorRagdollPrefab, Vector3.zero, rot, ring);
             newConveryor.SetActive(true);
-            newConveryor.transform.position -= (radius * 1.2f) * newConveryor.transform.up - 10.3f * Vector3.up;
+            newConveryor.transform.position -= (radius * 1.05f) * newConveryor.transform.up - 10.3f * Vector3.up;
             conveyorRagdolls[i] = newConveryor.transform;
         }
     }
 
+    float ringT = 0f;
+    [SerializeField] float ringMoveIncrement = 5f;
+    [SerializeField] float ringSpeed = 1f;
+    [SerializeField] float ringStopTime = 3f;
     void UpdateConveyor()
     {
+        ringT += Time.deltaTime * ringSpeed;
+        if (ringT >= ringStopTime)
+        {
+            ringT = 0f;
+        }
+        ring.Rotate(0f, ringMoveIncrement * ringAnimation.Evaluate(ringT) * Time.deltaTime, 0f);
     }
 }

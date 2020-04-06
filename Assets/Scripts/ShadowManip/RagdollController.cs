@@ -11,14 +11,14 @@ public class RagdollController : MonoBehaviour
     }
     bool isKinematic = true;
     [SerializeField] Animator animator;
-
-    
+    [SerializeField] BoxCollider ringTarget;
     SavedTransform[] lastAnimatedTransforms;
     SavedTransform[] lastRbTransforms;
     Rigidbody[] rbs;
 
     int ragdollLayerMask;
     int shadowCastLayerMask;
+    bool onConveyor = false;
     void Start()
     {
         // initialize
@@ -55,7 +55,12 @@ public class RagdollController : MonoBehaviour
     CCHand activeHand;
     void Update()
     {
-
+        if(onConveyor) return;
+            if(ringTarget.bounds.Contains(animator.transform.position))
+            {
+                onConveyor = true;
+                StartCoroutine(OntoConveyorRoutine());
+            }
         Vector3 lightPos = ShadowManipManager.instance.spotlight.position;
         RaycastHit hit;
         bool rightHandDown = CCPlayer.main.rightHand.handInput.triggerState == InputState.Down;
@@ -77,10 +82,7 @@ public class RagdollController : MonoBehaviour
         }
         if(activeHand && activeHand.handInput.triggerState == InputState.Released)
         {
-            rbThatFollows.isKinematic = false;
-            rbThatFollows = null;
-            activeHand = null;
-            StartCoroutine(TransitionToAnimator());
+            ResetToAnimator();
         }
 
         if(rbThatFollows != null)
@@ -88,8 +90,15 @@ public class RagdollController : MonoBehaviour
             bool wasHit = Physics.Raycast(lightPos, (activeHand.anchor.position - lightPos).normalized, out hit, 100, shadowCastLayerMask);
             if(wasHit && hit.collider.name.StartsWith("MouseIntersectionPlane"))
             {
-
-                rbThatFollows.MovePosition(hit.point + 1.5f * hit.collider.transform.up);
+                rbThatFollows.MovePosition(hit.point + hit.collider.transform.up);
+                if(ringTarget.bounds.Contains(rbThatFollows.transform.position))
+                {
+                    onConveyor = true;
+                    StartCoroutine(OntoConveyorRoutine());
+                }
+            } else {
+                // drop 
+                ResetToAnimator();
             }
         }
     }
@@ -103,8 +112,11 @@ public class RagdollController : MonoBehaviour
         SnapshotTransforms(lastRbTransforms);
         
         Vector3 rbTargetPoint = rbs[0].position.withY(0f);
+        ClampToCircle(ref rbTargetPoint);
+
         Vector3 diff = (rbTargetPoint - lastTargetPoint).withY(0f); // xz plane only
         lastTargetPoint = rbTargetPoint;
+        
         TranslateTransforms(lastAnimatedTransforms, diff);
         animator.gameObject.transform.position += diff;
 
@@ -118,6 +130,14 @@ public class RagdollController : MonoBehaviour
         }, 1f);
         animator.enabled = true;
         yield return 0f;
+    }
+
+    void ResetToAnimator()
+    {
+        rbThatFollows.isKinematic = false;
+        rbThatFollows = null;
+        activeHand = null;
+        StartCoroutine(TransitionToAnimator());
     }
 
     void TranslateTransforms(SavedTransform[] arr, Vector3 diff)
@@ -134,5 +154,27 @@ public class RagdollController : MonoBehaviour
         SetRagdollKinematic(false);
     }
 
-    
+    IEnumerator OntoConveyorRoutine()
+    {
+        SetRagdollKinematic(true);
+        Vector3 startingPos = animator.transform.position;
+        Vector3 startingRingPos = ringTarget.transform.position;
+        float startingVel = 15f;
+        while(startingVel > 1f)
+        {
+            startingVel = (1f -  3.7f * Time.deltaTime) * startingVel;
+            Vector3 pos = animator.transform.position + Time.deltaTime * startingVel * Vector3.up;
+            pos.x = Mathf.MoveTowards(pos.x, startingRingPos.x, Time.deltaTime);
+            pos.z = Mathf.MoveTowards(pos.z, startingRingPos.z, Time.deltaTime);
+            animator.transform.position = pos;
+            yield return 0;
+        };
+        TransitionToRagdoll();
+        animator.transform.SetParent(ringTarget.transform);
+    }
+
+    void ClampToCircle(ref Vector3 v)
+    {
+        v = v.normalized * (ShadowManipManager.instance.radius - 1f);
+    }
 }
