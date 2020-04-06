@@ -26,6 +26,7 @@ public class ShadowManipManager : MonoBehaviour
     LevelingPlane[] levelingPlanes;
 
     Transform[] conveyorRagdolls;
+    int ragdollLayerMask = 1 << 9;
 
     private void Awake()
     {
@@ -56,8 +57,10 @@ public class ShadowManipManager : MonoBehaviour
 
     void Update()
     {
+        //spotlight update
         spotlight.position = CCPlayer.main.leftHand.transform.position;
         spotlight.rotation = CCPlayer.main.leftHand.transform.rotation;
+        //ring and leveling plane update 
         for (int i = 0; i < numPlanes; i++)
         {
             Vector3 pos = levelingPlanes[i].t.position;
@@ -73,6 +76,19 @@ public class ShadowManipManager : MonoBehaviour
             levelingPlanes[i].t.position = pos;
         }
         UpdateConveyor();
+        //hand update
+        RaycastHit hit;
+        bool rightHandDown = CCPlayer.main.rightHand.handInput.triggerState == InputState.Down;
+        if(!rightHandDown) return;
+        if (Physics.Raycast(spotlight.position, (CCPlayer.main.rightHand.anchor.position - spotlight.position).normalized, out hit, 100, ragdollLayerMask)) {
+            if(hit.collider.name.StartsWith("mixamorig")){
+                RagdollController rc = hit.collider.GetComponentInParent<RagdollController>();
+                if(rc != null)
+                {
+                    rc.InitiateGrab(CCPlayer.main.rightHand, hit.rigidbody);
+                }
+            }
+        }
     }
 
     void SetupLevelingPlanes()

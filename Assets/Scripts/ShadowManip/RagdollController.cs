@@ -56,35 +56,14 @@ public class RagdollController : MonoBehaviour
     void Update()
     {
         if(onConveyor) return;
-            if(ringTarget.bounds.Contains(animator.transform.position))
-            {
-                onConveyor = true;
-                StartCoroutine(OntoConveyorRoutine());
-            }
-        Vector3 lightPos = ShadowManipManager.instance.spotlight.position;
-        RaycastHit hit;
-        bool rightHandDown = CCPlayer.main.rightHand.handInput.triggerState == InputState.Down;
 
-        if((rightHandDown)
-         && animator.enabled)
-        {
-            CCHand tActiveHand = CCPlayer.main.rightHand;
-            if (Physics.Raycast(lightPos, (tActiveHand.anchor.position - lightPos).normalized, out hit, 100, ragdollLayerMask)) {
-                Debug.Log(hit.collider.name);
-                if(hit.collider.name.StartsWith("mixamorig")){
-                    // make this collider kinematic
-                    TransitionToRagdoll();
-                    rbThatFollows = hit.rigidbody;
-                    rbThatFollows.isKinematic = true;
-                    activeHand = tActiveHand;
-                }
-            }
-        }
         if(activeHand && activeHand.handInput.triggerState == InputState.Released)
         {
             ResetToAnimator();
         }
 
+        Vector3 lightPos = ShadowManipManager.instance.spotlight.position;
+        RaycastHit hit;
         if(rbThatFollows != null)
         {
             bool wasHit = Physics.Raycast(lightPos, (activeHand.anchor.position - lightPos).normalized, out hit, 100, shadowCastLayerMask);
@@ -102,6 +81,17 @@ public class RagdollController : MonoBehaviour
             }
         }
     }
+
+    public void InitiateGrab(CCHand hand, Rigidbody rb)
+    {
+        if(animator.enabled)
+        {
+            TransitionToRagdoll();
+            rbThatFollows = rb;
+            rbThatFollows.isKinematic = true;
+            activeHand = hand;
+        }
+    }
     // set kinematic first, then lerp bones. 
     Vector3 lastTargetPoint = Vector3.zero;
     IEnumerator TransitionToAnimator()
@@ -116,7 +106,7 @@ public class RagdollController : MonoBehaviour
 
         Vector3 diff = (rbTargetPoint - lastTargetPoint).withY(0f); // xz plane only
         lastTargetPoint = rbTargetPoint;
-        
+
         TranslateTransforms(lastAnimatedTransforms, diff);
         animator.gameObject.transform.position += diff;
 
