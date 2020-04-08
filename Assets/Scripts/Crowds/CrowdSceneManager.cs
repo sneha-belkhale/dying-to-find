@@ -11,6 +11,7 @@ public class CrowdSceneManager : MonoBehaviour
         RenderSettings.fogColor = Color.white;
         RenderSettings.fogDensity = 0.003f;
         CCPlayer.main.useGravity = false;
+        CCPlayer.main.SetActiveHandType(HandType.Regular);
     }
 
     // Update is called once per frame

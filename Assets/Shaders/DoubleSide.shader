@@ -10,6 +10,7 @@ Shader "Unlit/DoubleSide"
         _Color ("Color", Color) = (0,0,0,0)
         _ColorBackside ("Color Backside", Color) = (0,0,0,0)
         [Toggle]_UsePointColor("Use Point Color?", Float) = 0
+        [Toggle]_UseFog("Use Fog?", Float) = 1
         _MainTex ("Texture", 2D) = "white" {}
     }
     SubShader
@@ -48,6 +49,7 @@ Shader "Unlit/DoubleSide"
             float4 _MainTex_ST;
             float4 _Color;
             float4 _ColorBackside;
+            float _UseFog;
 
 
             v2f vert (appdata v)
@@ -68,9 +70,13 @@ Shader "Unlit/DoubleSide"
 
             fixed4 frag (v2f i) : SV_Target
             {
-                fixed4 col = i.color;
+                fixed4 col = i.color + tex2D(_MainTex, i.uv);
                 // apply fog
-                UNITY_APPLY_FOG(i.fogCoord, col);
+                fixed4 colWithFog = col;
+                UNITY_APPLY_FOG(i.fogCoord, colWithFog);
+
+                col = lerp(col, colWithFog, _UseFog);
+
                 return col;
             }
             ENDCG

@@ -34,12 +34,17 @@ public class CCPlayer : MonoBehaviour
         pAcc = Vector3.up * -9.8f;
       }
   }
+  public void SetActiveHandType(HandType type)
+  {
+    leftHand.SetActiveHandType(type);
+    rightHand.SetActiveHandType(type);
+  }
   private void Update()
   {
     //debugging
     Vector3 finalMove = Vector3.zero;
-    finalMove.y += leftHand.grabInput.joystickInput.y;
-    finalMove.y += rightHand.grabInput.joystickInput.y;
+    finalMove.y += leftHand.handInput.joystickInput.y;
+    finalMove.y += rightHand.handInput.joystickInput.y;
 
     // Movement
     if (isGrabbing) {
@@ -63,6 +68,7 @@ public class CCPlayer : MonoBehaviour
 
   float GetArmSpan(){
     float mag = Vector3.Magnitude(leftHand.transform.position.withY(0) - rightHand.transform.position.withY(0));
+    UnderWorldLevelCode.instance.Wind.volume = 0.3f * mag;
     return Mathf.Clamp(1f - 4f * Time.deltaTime * mag, 0f , 1f);
   }
 

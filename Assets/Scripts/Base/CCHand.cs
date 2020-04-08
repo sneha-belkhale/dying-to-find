@@ -7,9 +7,14 @@ public enum Hand {
     Left,
     Right
 }
+public enum HandType {
+    Shadow,
+    Voxel,
+    Regular
+}
 public class CCHand : MonoBehaviour
 {
-    public CCInput grabInput;
+    public CCInput handInput;
     public GrabbableObject grabbedAgent;
     Vector3 lastGrabbedAgentPos;
     Vector3 lastHandPos;
@@ -20,10 +25,31 @@ public class CCHand : MonoBehaviour
     public bool isGrabbing = false;
     Collider[] results = new Collider[5];
     public Hand hand;
-
+    public Transform anchor;
+    [EnumArray(typeof(HandType)), SerializeField] public Transform[] handTypes;
+    [SerializeField] SkinnedMeshRenderer[] handRenderers;
+    HandType currentHandType = HandType.Shadow;
+    public void SetActiveHandType(HandType type)
+    {
+        currentHandType = type;
+        int selected = (int)type;
+        for (int i = 0; i < handTypes.Length; i++)
+        {
+            if(i==selected)
+            {
+                handTypes[i].gameObject.SetActive(true);
+            } else {
+                handTypes[i].gameObject.SetActive(false);
+            }
+        }
+        if(currentHandType == HandType.Shadow)
+        {
+            handTypes[(int)HandType.Regular].gameObject.SetActive(true);
+        }
+    }
     public void Update(){
-        switch(grabInput.GrabState){
-            case GrabState.Down : {
+        switch(handInput.grabState){
+            case InputState.Down : {
                 int length = Physics.OverlapSphereNonAlloc(transform.position, 0.4f, results, Physics.AllLayers, QueryTriggerInteraction.Ignore);
                 //get the closest one
                 float minDist = 1f;
@@ -46,7 +72,7 @@ public class CCHand : MonoBehaviour
                         grabbedAgent.grabber[(int)hand] = this;
                         grabbedAgent.grabPoint = lastClosestPoint;
                         lastGrabbedAgentPos = grabbedAgent.transform.position;
-                        grabInput.TriggerHaptics();
+                        handInput.TriggerHaptics();
                         grabbedAgent.onDownBase();
                         isGrabbing = true;
                     }
@@ -55,7 +81,7 @@ public class CCHand : MonoBehaviour
                 }
                 break;
             }
-            case GrabState.Holding: {
+            case InputState.Holding: {
                 if(isGrabbing){
                     // check if player somehow got too far
                     // if(Vector3.Distance(CCPlayer.localPlayer.transform.position, grabbedAgent.grabPoint) > 4f){
@@ -68,7 +94,7 @@ public class CCHand : MonoBehaviour
                 }
                 break;
             }
-            case GrabState.Released: {
+            case InputState.Released: {
                 if(isGrabbing){
                     isGrabbing = false;
                     HandleRelease();
@@ -77,6 +103,28 @@ public class CCHand : MonoBehaviour
             }
         }
         lastHandPos = transform.localPosition;
+
+        if(currentHandType != HandType.Voxel)
+        {
+            SetBlendShapes();
+        }
+    }
+
+    void SetBlendShapes()
+    {
+        switch(handInput.triggerState)
+        {
+            case InputState.Down : {
+                handRenderers[0].SetBlendShapeWeight(0,100);
+                handRenderers[1].SetBlendShapeWeight(0,100);
+                break;
+            }
+            case InputState.Up : {
+                handRenderers[0].SetBlendShapeWeight(0,0);
+                handRenderers[1].SetBlendShapeWeight(0,0);
+                break;
+            }   
+        }
     }
 
     void HandleRelease() {

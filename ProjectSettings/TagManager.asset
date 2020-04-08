@@ -14,8 +14,8 @@ TagManager:
   - 
   - 
   - Ignore Collisions
-  - 
-  - 
+  - ShadowCastTarget
+  - ShadowCastPlane
   - 
   - 
   - 

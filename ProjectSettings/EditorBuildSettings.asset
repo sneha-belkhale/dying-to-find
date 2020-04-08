@@ -11,10 +11,16 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/CrowdScene.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/UnderWorldScene.unity
     guid: f8afd1101a31e494f849274bea73050d
   - enabled: 0
-    path: Assets/Scenes/Tests/RopeTest.unity
+    path: Assets/Scenes/RopeTest.unity
     guid: 43df368f2c61e4d0f8d8e5db27a10422
+  - enabled: 0
+    path: Assets/Scenes/VoxelScene.unity
+    guid: 8772dd31dec044abbb16627149602acf
+  - enabled: 1
+    path: Assets/Scenes/ShadowManipScene.unity
+    guid: fce4dad2deef74ac6b44b62aefb8607d
   m_configObjects: {}

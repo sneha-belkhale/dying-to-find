@@ -66,9 +66,11 @@ public class InstancedVoxels : MonoBehaviour
         }
 
         int idx = 0;
-        matrices = new Matrix4x4[voxelGrid.Count];
+        int size = Mathf.Min(voxelGrid.Count, 1023);
+        matrices = new Matrix4x4[size];
         foreach(Vector3 pos in voxelGrid.Keys.ToList())
         {
+            if(idx >= size) break;
             Vector2 val = voxelGrid[pos];
             if(val.y < 1f)
             {
