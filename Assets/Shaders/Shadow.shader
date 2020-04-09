@@ -76,7 +76,13 @@
                 UNITY_LIGHT_ATTENUATION(attenuation, i, i.worldPos.xyz);
                 attenuation = 10 * pow(attenuation, 3);
                 attenuation = step(attenuation, 0.001);
-                fixed4 col = lerp(_LightColor, _ShadowColor, attenuation);
+
+                //apply fog to the light color
+                float viewDistance = length(_WorldSpaceCameraPos - i.worldPos);
+                float fogFactor = smoothstep(0.05,0.5,exp(-0.04*viewDistance));
+                fixed4 lightColor = lerp(unity_FogColor, _LightColor, fogFactor);
+
+                fixed4 col = lerp(lightColor, _ShadowColor, attenuation);
 
                 #if (USE_EFFECTS)
                     float dissolve = tex2D(_MainTex, i.uv.xy).r;
